@@ -208,15 +208,20 @@ footer .logo b span{color:var(--gold-light)}
 .sv-text li .mk>span{padding-left:20px;position:relative}
 .sv-text li .mk>span::before{content:'';position:absolute;left:0;top:.7em;width:9px;height:1.5px;background:var(--gold)}
 .sv-cta{align-self:flex-start;margin-top:8px}
-.sv-count{position:absolute;left:5%;bottom:4%;z-index:2;display:flex;gap:14px;align-items:center;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:0}
-.sv-count .roll{display:block;height:1.4em;overflow:hidden;line-height:1.4em;font-variant-numeric:tabular-nums}
-.sv-count .col{display:flex;flex-direction:column}
-.sv-count .tot{opacity:.55;margin-left:-8px}
 .sv-next{position:absolute;right:5%;bottom:4%;z-index:2;display:flex;align-items:center;gap:14px;background:none;border:0;cursor:pointer;font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:0}
 .sv-thumbs{position:relative;width:120px;height:84px;border-radius:14px;overflow:hidden;transition:transform .3s}
 .sv-next:hover .sv-thumbs{transform:scale(1.05)}
 .sv-thumbs i{position:absolute;inset:0;opacity:0}
 .sv-next:focus-visible{outline:2px solid var(--red);outline-offset:4px;border-radius:14px}
+
+/* КОМАНДА: бегущая лента (только если разрешено движение) */
+.team-marquee .team-viewport{position:relative;overflow:hidden;margin-top:8px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.team-marquee .team-grid{display:flex;gap:28px;width:max-content;grid-template-columns:none;will-change:transform}
+.team-marquee .person{flex:0 0 clamp(210px,19vw,280px)}
+.team-ctl{display:flex;justify-content:flex-end;margin-top:18px}
+.team-ctl button{background:none;border:0;cursor:pointer;font:inherit;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 4px;display:inline-flex;gap:8px;align-items:center}
+.team-ctl button:hover{color:var(--navy)}
+.team-ctl button:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
 
 @media (max-width:980px){
   .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.55) 0%,rgba(8,26,51,.72) 55%,rgba(8,26,51,.8) 100%)}
@@ -491,7 +496,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       title:a.querySelector('h3').textContent,
       bullets:[...a.querySelectorAll('li')].map(li=>li.textContent),
       href:b.getAttribute('href'),topic:b.dataset.topic,label:b.textContent};});
-    const N=items.length, pad=n=>String(n).padStart(2,'0');
+    const N=items.length;
     const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
     const mask=(child)=>{const m=el('span','mk');m.appendChild(child);return m;};
 
@@ -515,15 +520,11 @@ document.addEventListener('DOMContentLoaded',()=>{
       wrap.appendChild(a);p.appendChild(wrap);texts.appendChild(p);
       panes.push(p);lines.push(ls.map(m=>m.firstElementChild));ctas.push(wrap);
     });
-    const count=el('div','sv-count');count.setAttribute('aria-hidden','true');
-    const roll=el('span','roll'),col=el('span','col');
-    items.forEach((_,i)=>col.appendChild(el('span',null,pad(i+1))));
-    roll.appendChild(col);count.append(el('span',null,'Услуги'),roll,el('span','tot','/ '+pad(N)));
     const next=el('button','sv-next');next.type='button';next.setAttribute('aria-label','Показать следующую услугу');
     const thumbs=el('span','sv-thumbs'),tis=[];
     items.forEach(it=>{const t=el('i');t.setAttribute('style',it.bg);thumbs.appendChild(t);tis.push(t);});
     next.append(el('span',null,'Далее'),thumbs);
-    stage.append(frame,title,texts,count,next);
+    stage.append(frame,title,texts,next);
     svcSec.appendChild(stage);svcSec.classList.add('svc-pinned');
     document.documentElement.style.scrollBehavior='auto';   // CSS smooth-scroll ломает прилипание ScrollTrigger
 
@@ -554,7 +555,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       .fromTo(frame,S1,{...S2,duration:1,ease:'power3.inOut',...R},1.9)
       .fromTo(lines[0],{yPercent:110},{yPercent:0,duration:.5,stagger:.07,ease:'power3.out',...R},2.6)
       .fromTo(ctas[0],{opacity:0,y:12},{opacity:1,y:0,duration:.4,...R},3.1)
-      .fromTo([count,next],{opacity:0},{opacity:1,duration:.5,...R},2.6);
+      .fromTo(next,{opacity:0},{opacity:1,duration:.5,...R},2.6);
     // 3. смена услуг
     for(let i=1;i<N;i++){
       const T=Tn(i);
@@ -565,7 +566,6 @@ document.addEventListener('DOMContentLoaded',()=>{
         .fromTo(ins[i-1],{scale:1},{scale:.94,duration:.8,ease:'power2.inOut',...R},T)
         .fromTo(lines[i],{yPercent:110},{yPercent:0,duration:.5,stagger:.07,ease:'power3.out',...R},T+.45)
         .fromTo(ctas[i],{opacity:0,y:12},{opacity:1,y:0,duration:.4,...R},T+.9)
-        .fromTo(col,{yPercent:-(i-1)*100/N},{yPercent:-i*100/N,duration:.5,ease:'power3.inOut',...R},T+.1)
         .fromTo(tis[i],{opacity:1},{opacity:0,duration:.3,...R},T);
       if(i+1<N) tl.fromTo(tis[i+1],{opacity:0},{opacity:1,duration:.4,...R},T+.35);
       else tl.fromTo(next,{opacity:1},{opacity:0,duration:.4,...R},T);
@@ -591,6 +591,55 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
     return ()=>{svcSec.classList.remove('svc-pinned');stage.remove();document.documentElement.style.scrollBehavior='';};
   });
+
+
+  // Команда: лента движется сама, не останавливаясь; прокрутка страницы разгоняет её, наведение притормаживает
+  (function(){
+    const sec=document.getElementById('team'), grid=sec.querySelector('.team-grid'), wrapEl=sec.querySelector('.wrap');
+    const originals=[...grid.children];
+    const view=document.createElement('div');view.className='team-viewport';
+    view.appendChild(grid);sec.appendChild(view);sec.classList.add('team-marquee');
+    const ctl=document.createElement('div');ctl.className='team-ctl wrap';
+    const btn=document.createElement('button');btn.type='button';btn.textContent='Пауза';btn.setAttribute('aria-pressed','false');
+    ctl.appendChild(btn);sec.appendChild(ctl);
+
+    let clones=[], loopW=0, pos=0, speed=0, paused=false, hover=false, vel=0, visible=false;
+    const base=70;                                  // px в секунду
+    const setX=gsap.quickSetter(grid,'x','px');
+
+    function build(){
+      clones.forEach(c=>c.remove());clones=[];
+      const gap=parseFloat(getComputedStyle(grid).columnGap)||0;
+      loopW=originals.reduce((w,o)=>w+o.getBoundingClientRect().width+gap,0);
+      const sets=Math.ceil(view.clientWidth/loopW)+1;
+      for(let k=0;k<sets;k++) originals.forEach(o=>{const c=o.cloneNode(true);c.setAttribute('aria-hidden','true');c.inert=true;grid.appendChild(c);clones.push(c);});
+    }
+    build();
+    let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(build,200);});
+
+    view.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')hover=true;});
+    view.addEventListener('pointerleave',()=>{hover=false;});
+    btn.addEventListener('click',()=>{paused=!paused;btn.textContent=paused?'Продолжить':'Пауза';btn.setAttribute('aria-pressed',String(paused));});
+
+    ScrollTrigger.create({trigger:sec,start:'top bottom',end:'bottom top',onToggle:s=>{visible=s.isActive;},
+      onUpdate:self=>{vel=self.getVelocity();}});
+
+    gsap.ticker.add((time,dt)=>{
+      if(!visible||!loopW)return;
+      const k=Math.min(dt,250)/1000;
+      vel*=Math.pow(.02,k);                        // скорость прокрутки затухает
+      const boost=gsap.utils.clamp(-900,900,vel*.35);
+      const target=(paused?0:base+boost)*(hover&&!paused?.12:1);
+      speed+=(target-speed)*Math.min(1,k*6);
+      pos=(pos+speed*k)%loopW;
+      if(pos<0)pos+=loopW;
+      setX(-pos);
+    });
+
+    // появление заголовка и первых карточек
+    gsap.from(wrapEl.querySelector('.sec-head'),{opacity:0,y:30,duration:.9,ease:'power3.out',scrollTrigger:{trigger:sec,start:'top 80%',once:true}});
+    gsap.from(view,{opacity:0,y:40,duration:1,ease:'power3.out',scrollTrigger:{trigger:sec,start:'top 70%',once:true}});
+  })();
 
   addEventListener('load',()=>ScrollTrigger.refresh());
 
