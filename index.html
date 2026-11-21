@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КитНавигатор — прототип сайта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+:root{
+  --milk:#f4efe6; --milk-2:#ece5d8; --navy:#0d2a4f; --navy-deep:#081a33;
+  --graphite:#2b2f36; --red:#c8102e; --gold:#b8923f; --gold-light:#c9a45c; --gold-text:#7d5f1a;
+  --muted:#4a586b; --red-on-dark:#ff6b7d; --line:rgba(13,42,79,.16); --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Onest',system-ui,sans-serif;background:var(--milk);color:var(--navy);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.ico{width:1.1em;height:1.1em;flex:none;vertical-align:-.15em}
+h2{font-size:clamp(34px,5vw,60px);line-height:1;letter-spacing:-.035em;font-weight:800;max-width:900px}
+h2 em{font-style:normal;color:var(--red)}
+.sec{padding:110px 0;position:relative}
+.sec-head{margin-bottom:48px;display:flex;flex-direction:column;gap:14px}
+.sec-head p{color:var(--muted);font-size:17px;max-width:520px}
+
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:600;font-size:15px;border:1.5px solid transparent;cursor:pointer;transition:transform .25s,background .25s,color .25s,box-shadow .25s;font-family:inherit}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 8px 24px -10px rgba(200,16,46,.7)}
+.btn-line{border-color:var(--navy);color:var(--navy);background:transparent}
+.btn-line:hover{background:var(--navy);color:var(--milk)}
+.btn-milk{background:var(--milk);color:var(--navy)}
+.btn-sm{padding:11px 20px;font-size:14px}
+.btn .ico{transition:transform .25s}
+.btn:hover .ico{transform:translate(3px,-3px)}
+
+/* NAV + LOGO */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,box-shadow .3s,padding .3s;padding:22px 0}
+.nav:not(.scrolled){color:var(--milk)}
+.nav:not(.scrolled) .logo b span{color:var(--red-on-dark)}
+.nav:not(.scrolled) ul a::after{background:var(--milk)}
+.nav.scrolled{background:rgba(244,239,230,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line);padding:14px 0}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:inline-flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo .mark{width:38px;height:38px;border-radius:50%;background:var(--red);color:var(--milk);display:grid;place-items:center;flex:none;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+.logo .mark svg{width:24px;height:24px}
+.logo:hover .mark{transform:rotate(-12deg) scale(1.06)}
+.logo b span{color:var(--red)}
+.nav ul{display:flex;gap:30px;list-style:none;font-size:14px;font-weight:500}
+.nav ul a{position:relative;padding:4px 0}
+.nav ul a::after{content:'';position:absolute;left:0;bottom:0;height:1.5px;width:0;background:var(--red);transition:width .3s}
+.nav ul a:hover::after{width:100%}
+.nav .tel{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center}
+
+/* HERO */
+.hero{min-height:100vh;min-height:100svh;padding:140px 0 90px;position:relative;overflow:hidden;background:var(--navy-deep);color:var(--milk)}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 50%;display:block}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,26,51,.86) 0%,rgba(8,26,51,.62) 42%,rgba(8,26,51,.18) 100%),linear-gradient(0deg,rgba(8,26,51,.55),transparent 35%),linear-gradient(180deg,rgba(8,26,51,.5),transparent 22%)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,760px);align-items:center;min-height:calc(100vh - 230px)}
+.hero h1{font-size:clamp(40px,5.6vw,84px);line-height:.96;letter-spacing:-.045em;font-weight:800}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;white-space:nowrap}
+.hero h1 .ln>span{display:block}
+.hero h1{text-shadow:0 2px 28px rgba(8,26,51,.35)}
+.hero h1 em{font-style:normal;color:var(--red-on-dark)}
+.hero .lead{margin:26px 0 34px;font-size:20px;color:rgba(244,239,230,.9);max-width:520px}
+.hero .btn-line{border-color:rgba(244,239,230,.7);color:var(--milk)}
+.hero .btn-line:hover{background:var(--milk);color:var(--navy)}
+.hero .btn:focus-visible{outline-color:var(--milk)}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+
+/* ABOUT */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px;max-width:900px}
+.stat b{display:block;font-size:clamp(52px,6vw,84px);letter-spacing:-.04em;font-weight:800;line-height:1}
+.stat span{display:block;margin-top:6px;font-size:15px;max-width:190px}
+.stat small{display:block;margin-top:4px;font-size:13px;color:var(--muted)}
+.about .big{font-size:clamp(24px,2.9vw,36px);line-height:1.22;letter-spacing:-.025em;font-weight:500}
+.about .big em{font-style:normal;color:var(--red);font-weight:800}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.svc{background:#fbf8f2;border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);transition:transform .35s,box-shadow .35s}
+.svc:hover{transform:translateY(-6px);box-shadow:0 24px 50px -24px rgba(13,42,79,.4)}
+.svc-img{position:relative;height:160px;overflow:hidden}
+.svc-img .bg{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.svc:hover .svc-img .bg{transform:scale(1.1)}
+.svc-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:14px;flex:1}
+.svc h3{font-size:22px;line-height:1.15;letter-spacing:-.02em;font-weight:700}
+.svc ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:15px;color:var(--muted)}
+.svc li{padding-left:18px;position:relative}
+.svc li::before{content:'';position:absolute;left:0;top:.7em;width:8px;height:1.5px;background:var(--gold)}
+.svc .btn{margin-top:auto;align-self:flex-start}
+
+/* CASES */
+.cases{background:var(--milk-2)}
+.case-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px}
+.case{display:flex;flex-direction:column;gap:14px}
+.case:nth-child(1){grid-column:span 4}.case:nth-child(2){grid-column:span 2}
+.case:nth-child(3){grid-column:span 2}.case:nth-child(4){grid-column:span 4}
+.case:nth-child(5),.case:nth-child(6){grid-column:span 3}
+.case-img{position:relative;height:240px;border-radius:var(--r);overflow:hidden}
+.case:nth-child(2) .case-img,.case:nth-child(3) .case-img{height:240px}
+.case-img .bg{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.case:hover .case-img .bg{transform:scale(1.07)}
+.case h3{font-size:clamp(19px,1.9vw,24px);line-height:1.2;letter-spacing:-.02em;font-weight:700}
+.case .tag{align-self:flex-start;font-size:13px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+
+/* CONSULT */
+.consult{padding:0 0 110px}
+.consult-box{background:var(--navy);color:var(--milk);border-radius:var(--r);padding:44px 52px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.consult-box h3{font-size:clamp(26px,3.2vw,40px);line-height:1.05;letter-spacing:-.03em;font-weight:800;max-width:520px}
+.consult-box p{color:rgba(244,239,230,.75);margin-top:10px}
+.consult-box .btn{white-space:nowrap}
+
+/* PROCESS */
+.process{background:var(--navy);color:var(--milk)}
+.process h2{color:var(--milk)}
+.steps{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.steps::before{content:'';position:absolute;left:0;right:0;top:19px;height:1px;background:rgba(244,239,230,.18)}
+.steps .prog{position:absolute;left:0;top:19px;height:1.5px;width:0;background:var(--gold-light)}
+.step{position:relative;padding-top:54px}
+.step .dot{position:absolute;top:10px;left:0;width:20px;height:20px;border-radius:50%;background:var(--navy);border:1.5px solid var(--gold-light);transition:background .3s,box-shadow .3s}
+.step.on .dot{background:var(--red);border-color:var(--red);box-shadow:0 0 0 7px rgba(200,16,46,.22)}
+.step .num{font-size:13px;color:var(--gold-light);letter-spacing:.1em;font-weight:600}
+.step h3{font-size:22px;line-height:1.15;margin:8px 0 8px;letter-spacing:-.02em}
+.step p{font-size:15px;color:rgba(244,239,230,.72)}
+
+/* GEO */
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
+.person{display:flex;flex-direction:column;gap:14px}
+.portrait{position:relative;aspect-ratio:4/5;border-radius:999px 999px 12px 12px;overflow:hidden;background:var(--milk-2)}
+.portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.person:hover .portrait img{transform:scale(1.07)}
+.person h3{font-size:19px;letter-spacing:-.02em;line-height:1.1}
+.person .role{font-size:15px;color:var(--muted);margin-top:4px}
+
+/* CONTACTS */
+.contacts{background:var(--navy);color:var(--milk);position:relative;overflow:hidden}
+.contacts::after{content:'';position:absolute;right:-120px;top:-120px;width:380px;height:380px;border-radius:50%;background:var(--red);pointer-events:none}
+.contacts .wrap{position:relative;z-index:1}
+.contacts h2{color:var(--milk)}
+.contacts h2 em{color:var(--gold-light)}
+.c-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;margin-top:48px}
+.c-info{display:flex;flex-direction:column;gap:28px}
+.c-info small{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-light);margin-bottom:6px;font-weight:600}
+.c-info .big{font-size:clamp(28px,3.4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.05}
+.c-info .mid{font-size:19px}
+.msgs{display:flex;gap:12px;flex-wrap:wrap}
+.msg{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;border:1px solid rgba(244,239,230,.35);border-radius:999px;font-weight:600;font-size:15px;transition:background .25s,color .25s,border-color .25s}
+.msg:hover{background:var(--milk);color:var(--navy);border-color:var(--milk)}
+form{background:var(--milk);color:var(--navy);padding:34px;border-radius:var(--r);display:flex;flex-direction:column;gap:16px}
+form h3{font-size:24px;letter-spacing:-.02em}
+.f{display:flex;flex-direction:column;gap:6px}
+.f label{font-size:14px;color:var(--muted);font-weight:500}
+.f input,.f textarea{font:inherit;font-size:16px;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);transition:border-color .2s,box-shadow .2s}
+.f input:focus,.f textarea:focus{outline:0;border-color:var(--red);box-shadow:0 0 0 4px rgba(200,16,46,.12)}
+.f textarea{min-height:90px;resize:vertical}
+.agree{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.agree input{margin-top:3px;accent-color:var(--red)}
+.thanks{display:none;padding:16px;background:#fff;border-radius:10px;border:1.5px solid var(--gold);font-size:14px}
+footer{background:var(--navy-deep);color:rgba(244,239,230,.6);padding:26px 0;font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+footer .logo{color:var(--milk);font-size:17px}
+footer .logo .mark{width:30px;height:30px}
+footer .logo .mark svg{width:19px;height:19px}
+footer .logo b span{color:var(--gold-light)}
+.proto-bar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:99;background:var(--graphite);color:#fff;font-size:12px;padding:8px 16px;border-radius:999px;opacity:.9;pointer-events:none;white-space:nowrap}
+
+@media (max-width:980px){
+  .nav ul{display:none}
+  .hero h1 .ln{white-space:normal}
+  .c-grid{grid-template-columns:1fr;gap:36px}
+  .stats{gap:28px}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .case-grid{grid-template-columns:1fr 1fr}
+  .case:nth-child(n){grid-column:span 1}
+  .case:nth-child(1){grid-column:span 2}
+  .consult-box{flex-direction:column;align-items:flex-start;padding:36px 28px}
+  .steps{grid-template-columns:1fr;gap:6px}
+  .steps::before,.steps .prog{left:9px;right:auto;top:0;bottom:0;width:1.5px;height:auto}
+  .step{padding:0 0 26px 44px}
+  .step .dot{top:2px}
+  .team-grid{grid-template-columns:1fr 1fr 1fr}
+}
+@media (max-width:980px){
+  .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.55) 0%,rgba(8,26,51,.72) 55%,rgba(8,26,51,.8) 100%)}
+  .hero-bg video{object-position:60% 50%}
+}
+@media (max-width:620px){
+  .wrap{padding:0 20px}.sec{padding:76px 0}
+  .svc-grid,.case-grid{grid-template-columns:1fr}
+  .case:nth-child(n){grid-column:span 1}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .nav .tel span{display:none}
+  .proto-bar{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></symbol>
+  <symbol id="i-whale-tail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 14L8.9134 12.39C8.9709 12.16 9 11.93 9 11.7C9 10.71 8.4652 9.79 7.5913 9.28L6.5 8.64C4.949 7.73 4 6.1 4 4.34V3.49C4 3.05 4.545 2.83 4.8638 3.15L4.9393 3.22C5.6185 3.88 6.5396 4.25 7.5 4.25C8.4604 4.25 9.3815 4.62 10.0607 5.29L12 7.18M15.5 14.5L15.0584 12.35C15.0196 12.16 15 11.96 15 11.77C15 10.74 15.5541 9.78 16.4597 9.25L17.5 8.65C19.051 7.74 20 6.1 20 4.34V3.49C20 3.05 19.455 2.83 19.1362 3.15L19.0607 3.22C18.3815 3.88 17.4604 4.25 16.5 4.25C15.5396 4.25 14.6185 4.63 13.9393 5.29L12 7.18M2 14.5C2.9123 13.54 4.1772 13 5.5 13C6.8228 13 8.0877 13.54 9 14.5C9.9123 15.46 11.1772 16 12.5 16C13.8228 16 15.0877 15.46 16 14.5C16.9123 13.54 18.1772 13 19.5 13C20.4 13 21.3 13.25 22 13.7M2 19.5C2.9123 18.54 4.1772 18 5.5 18C6.8228 18 8.0877 18.54 9 19.5C9.9123 20.46 11.1772 21 12.5 21C13.8228 21 15.0877 20.46 16 19.5C16.9123 18.54 18.1772 18 19.5 18C20.4 18 21.3 18.25 22 18.7"/></symbol>
+  <symbol id="i-tg" viewBox="0 0 24 24"><path fill="currentColor" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0zm4.962 7.224c.1-.002.321.023.465.14a.5.5 0 0 1 .171.325c.016.093.036.306.02.472c-.18 1.898-.962 6.502-1.36 8.627c-.168.9-.499 1.201-.82 1.23c-.696.065-1.225-.46-1.9-.902c-1.056-.693-1.653-1.124-2.678-1.8c-1.185-.78-.417-1.21.258-1.91c.177-.184 3.247-2.977 3.307-3.23c.007-.032.014-.15-.056-.212s-.174-.041-.249-.024q-.159.037-5.061 3.345q-.72.495-1.302.48c-.428-.008-1.252-.241-1.865-.44c-.752-.245-1.349-.374-1.297-.789q.04-.324.893-.663q5.247-2.286 6.998-3.014c3.332-1.386 4.025-1.627 4.476-1.635"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967c-.273-.099-.471-.148-.67.15c-.197.297-.767.966-.94 1.164c-.173.199-.347.223-.644.075c-.297-.15-1.255-.463-2.39-1.475c-.883-.788-1.48-1.761-1.653-2.059c-.173-.297-.018-.458.13-.606c.134-.133.298-.347.446-.52s.198-.298.298-.497c.099-.198.05-.371-.025-.52s-.669-1.612-.916-2.207c-.242-.579-.487-.5-.669-.51a13 13 0 0 0-.57-.01c-.198 0-.52.074-.792.372c-.272.297-1.04 1.016-1.04 2.479c0 1.462 1.065 2.875 1.213 3.074s2.096 3.2 5.077 4.487c.709.306 1.262.489 1.694.625c.712.227 1.36.195 1.871.118c.571-.085 1.758-.719 2.006-1.413s.248-1.289.173-1.413c-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214l-3.741.982l.998-3.648l-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884c2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.82 11.82 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.9 11.9 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 0 0-3.48-8.413"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="КитНавигатор, на главную"><span class="mark" aria-hidden="true"><svg><use href="#i-whale-tail"/></svg></span><b>Кит<span>Навигатор</span></b></a>
+    <ul>
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#cases">Кейсы</a></li>
+      <li><a href="#process">Как работаем</a></li>
+      <li><a href="#team">Команда</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <a class="tel" href="tel:+79240102520"><svg class="ico"><use href="#i-phone"/></svg><span>+7 924 010-25-20</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- Главный экран -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"><video id="heroVideo" src="assets/hero-v6.mp4" poster="assets/hero-poster-v5.webp" autoplay muted loop playsinline preload="auto" tabindex="-1"></video></div>
+  <div class="wrap">
+    <div>
+      <h1>
+        <span class="ln"><span>Ваш проводник</span></span>
+        <span class="ln"><span>в мире <em>китайских</em></span></span>
+        <span class="ln"><span>возможностей</span></span>
+      </h1>
+      <p class="lead" data-fade>Находим производителей в Китае, ведём переговоры, организуем поездки и поставки.</p>
+      <div class="cta" data-fade>
+        <a class="btn btn-red" href="#contacts">Обсудить проект <svg class="ico"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-line" href="#services">Услуги</a>
+      </div>
+    </div>
+      </div>
+</section>
+
+<!-- О компании -->
+<section class="sec" id="about" style="padding-top:50px">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b data-count="40" data-suffix="+">0</b><span>международных бизнес-мероприятий</span></div>
+      <div class="stat"><b data-count="50" data-suffix="+">0</b><span>деловых встреч высокого уровня</span></div>
+      <div class="stat"><b data-count="12" data-suffix="+">0</b><span>проектов под ключ</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Услуги -->
+<section class="sec" id="services" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head"><h2>Чем мы <em>занимаемся</em></h2></div>
+    <div class="svc-grid">
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#1d4478,#0d2a4f)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Поиск и проверка поставщиков</h3>
+          <ul><li>Поиск производителей в Китае</li><li>Проверка юридического статуса и репутации</li><li>Отчёт по каждому поставщику</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: поиск и проверка поставщиков">Обсудить услугу</a></div>
+      </article>
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#8a2a35,#3a1018)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Переговоры с китайскими партнёрами</h3>
+          <ul><li>Языковое сопровождение</li><li>Учёт культурных особенностей</li><li>Защита ваших интересов, фиксация договорённостей</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: переговоры с китайскими партнёрами">Обсудить услугу</a></div>
+      </article>
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#3c6ea8,#13335c)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Бизнес-поездки в Китай</h3>
+          <ul><li>Командировки, билеты, гостиницы, трансферы</li><li>График встреч с партнёрами</li><li>Переводчик на встречах</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: бизнес-поездка в Китай">Обсудить услугу</a></div>
+      </article>
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#6b5a2e,#2b2f36)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Устные и письменные переводы</h3>
+          <ul><li>Деловые переговоры</li><li>Техническая документация и контракты</li><li>Медицинская и юридическая тематика</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: переводы">Обсудить услугу</a></div>
+      </article>
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#2b2f36,#0b2140)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Организация цепочек поставок</h3>
+          <ul><li>Контроль качества на производстве</li><li>Консолидация грузов, таможенное оформление</li><li>Организация доставки</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: цепочки поставок">Обсудить услугу</a></div>
+      </article>
+
+      <article class="svc">
+        <div class="svc-img"><div class="bg" style="background:linear-gradient(135deg,#9c7a30,#4a3a14)"></div><div class="ph-cap" style="left:16px;bottom:14px">Иллюстрация</div></div>
+        <div class="svc-body"><h3>Консультации и тренинги</h3>
+          <ul><li>Деловой протокол и китайская деловая культура</li><li>Подготовка сотрудников к переговорам</li><li>Практическое обучение</li></ul>
+          <a class="btn btn-line btn-sm" href="#contacts" data-topic="Интересует услуга: консультации и тренинги">Обсудить услугу</a></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Кейсы -->
+<section class="sec cases" id="cases">
+  <div class="wrap">
+    <div class="sec-head"><h2>Наши <em>проекты</em></h2></div>
+    <div class="case-grid">
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#3c6ea8,#0d2a4f)"></div><div class="ph-cap">Фото кейса</div></div><h3>Бизнес-тур РАСТО в Шанхай: выставка Automechanika и встречи с китайскими автопредприятиями</h3><span class="tag">Бизнес-тур</span></article>
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#8a2a35,#3a1018)"></div><div class="ph-cap">Фото кейса</div></div><h3>B2B-встречи китайских и российских автопредприятий</h3><span class="tag">Организация встреч</span></article>
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#1d4478,#2b2f36)"></div><div class="ph-cap">Фото кейса</div></div><h3>Локализация медицинского оборудования в РФ</h3><span class="tag">Локализация</span></article>
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#6b5a2e,#13335c)"></div><div class="ph-cap">Фото кейса</div></div><h3>Поиск и проверка поставщиков оборудования для парков развлечений</h3><span class="tag">Поиск и проверка</span></article>
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#9c7a30,#4a3a14)"></div><div class="ph-cap">Фото кейса</div></div><h3>Тренинги по работе с китайскими поставщиками</h3><span class="tag">Обучение</span></article>
+      <article class="case"><div class="case-img"><div class="bg" style="background:linear-gradient(135deg,#2b2f36,#0b2140)"></div><div class="ph-cap">Фото кейса</div></div><h3>Анализ китайского рынка медицинских исследований и поиск партнёров</h3><span class="tag">Анализ рынка</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- Консультация -->
+<section class="consult" style="padding-top:110px">
+  <div class="wrap">
+    <div class="consult-box">
+      <div>
+        <h3>Не уверены, какая услуга нужна?</h3>
+        <p>Опишите задачу, подскажем, с чего начать.</p>
+      </div>
+      <a class="btn btn-milk" href="#contacts" data-topic="Хочу получить консультацию">Получить консультацию <svg class="ico"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- Как работаем -->
+<section class="sec process" id="process">
+  <div class="wrap">
+    <div class="sec-head"><h2>Как мы работаем</h2></div>
+    <div class="steps" id="steps">
+      <div class="prog"></div>
+      <div class="step"><div class="dot"></div><div class="num">01</div><h3>Заявка</h3><p>Вы описываете задачу.</p></div>
+      <div class="step"><div class="dot"></div><div class="num">02</div><h3>Проверка</h3><p>Подбираем и проверяем партнёров.</p></div>
+      <div class="step"><div class="dot"></div><div class="num">03</div><h3>Переговоры</h3><p>Ведём диалог, фиксируем итоги.</p></div>
+      <div class="step"><div class="dot"></div><div class="num">04</div><h3>Организация</h3><p>Поездки, переводы, логистика.</p></div>
+      <div class="step"><div class="dot"></div><div class="num">05</div><h3>Реализация</h3><p>Доводим проект до конца.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Команда -->
+<section class="sec" id="team">
+  <div class="wrap">
+    <div class="sec-head"><h2>Наша <em>команда</em></h2></div>
+    <div class="team-grid">
+      <article class="person">
+        <div class="portrait"><img src="assets/lyudmila.webp" alt="Людмила Усольцева" width="312" height="312"></div>
+        <div><h3>Людмила Усольцева</h3><div class="role">Основатель, китаист, переводчик</div></div>
+      </article>
+      <article class="person">
+        <div class="portrait"><img src="assets/tang.webp" alt="Sapphire Tang" width="312" height="312"></div>
+        <div><h3>Sapphire Tang</h3><div class="role">Партнёр в Китае, организатор бизнес-поездок</div></div>
+      </article>
+      <article class="person">
+        <div class="portrait"><img src="assets/elena.webp" alt="Елена Артапух" width="312" height="312"></div>
+        <div><h3>Елена Артапух</h3><div class="role">Китаист, цепочки поставок, бизнес-этикет</div></div>
+      </article>
+      <article class="person">
+        <div class="portrait"><img src="assets/ekaterina.webp" alt="Екатерина Бабешко" width="312" height="312"></div>
+        <div><h3>Екатерина Бабешко</h3><div class="role">Куратор локализации оборудования и сайтов</div></div>
+      </article>
+      <article class="person">
+        <div class="portrait"><img src="assets/irina.webp" alt="Ирина Баяндина" width="312" height="312"></div>
+        <div><h3>Ирина Баяндина</h3><div class="role">Переводчик, юрист, куратор проектов</div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Контакты -->
+<section class="sec contacts" id="contacts">
+  <div class="wrap">
+    <h2>Обсудим ваш <em>проект</em></h2>
+    <div class="c-grid">
+      <div class="c-info">
+        <div><small>Телефон</small><a class="big" href="tel:+79240102520">+7 924 010-25-20</a></div>
+        <div class="msgs">
+          <a class="msg" href="https://t.me/+79240102520"><svg class="ico"><use href="#i-tg"/></svg>Telegram</a>
+          <a class="msg" href="https://wa.me/79240102520"><svg class="ico"><use href="#i-wa"/></svg>WhatsApp</a>
+        </div>
+        <div><small>Email</small><a class="mid" href="mailto:info@kitnavigator.ru">info@kitnavigator.ru</a></div>
+        <div><small>Адрес</small><div class="mid">Москва, 3-й Нижнелихоборский проезд</div></div>
+      </div>
+      <form id="leadForm">
+        <h3>Оставьте заявку</h3>
+        <div class="f"><label for="n">Имя</label><input id="n" required></div>
+        <div class="f"><label for="c">Телефон или email</label><input id="c" required></div>
+        <div class="f"><label for="m">Задача</label><textarea id="m"></textarea></div>
+        <label class="agree"><input type="checkbox" required> Согласен на обработку персональных данных</label>
+        <button class="btn btn-red" type="submit" style="justify-content:center">Отправить <svg class="ico"><use href="#i-arrow"/></svg></button>
+        <div class="thanks" id="thanks">Спасибо. В прототипе форма ничего не отправляет.</div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><a href="#top" class="logo" aria-label="КитНавигатор, наверх"><span class="mark" aria-hidden="true"><svg><use href="#i-whale-tail"/></svg></span><b>Кит<span>Навигатор</span></b></a><span>КитНавигатор, 2026 Все права защищены. Сделано с заботой о вашем успехе!</span></div></footer>
+<div class="proto-bar">Прототип для обсуждения</div>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nav = document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',scrollY>30);
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // тема в форме по кнопкам «Обсудить услугу» / «Консультация»
+  const m=document.getElementById('m');
+  m.addEventListener('input',()=>m.dataset.auto='0');
+  document.querySelectorAll('[data-topic]').forEach(a=>a.addEventListener('click',()=>{
+    if(!m.value||m.dataset.auto==='1'){m.value=a.dataset.topic;m.dataset.auto='1';}
+  }));
+
+  leadForm.addEventListener('submit',e=>{e.preventDefault();thanks.style.display='block';});
+
+  if(reduce||!window.gsap){
+    document.querySelectorAll('[data-count]').forEach(e=>e.textContent=e.dataset.count+(e.dataset.suffix||''));
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // главный экран
+  gsap.timeline({defaults:{ease:'power4.out'}})
+    .from('.hero h1 .ln>span',{yPercent:110,duration:1.1,stagger:.12})
+    .from('.hero [data-fade]',{opacity:0,y:24,duration:.9,stagger:.1},'-=.6');
+
+  // счётчики
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const o={v:0},s=el.dataset.suffix||'';
+    ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter:()=>gsap.to(o,{v:+el.dataset.count,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=Math.round(o.v)+s})});
+  });
+
+  // шаги процесса
+  const steps=gsap.utils.toArray('.step');
+  const vertical=()=>matchMedia('(max-width:980px)').matches;
+  ScrollTrigger.create({trigger:'#steps',start:'top 70%',end:'bottom 60%',scrub:true,onUpdate:s=>{
+    const p=s.progress;
+    gsap.set('.steps .prog',vertical()?{height:(p*100)+'%',width:'1.5px'}:{width:(p*100)+'%'});
+    steps.forEach((st,i)=>st.classList.toggle('on',p>=i/(steps.length-1)-.001));
+  }});
+
+});
+</script>
+<script>
+(function(){
+  var v=document.getElementById('heroVideo'); if(!v) return;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function sync(){ if(reduce.matches){v.pause();v.removeAttribute('autoplay');} else {v.play().catch(function(){});} }
+  sync(); if(reduce.addEventListener) reduce.addEventListener('change',sync);
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(e){ if(reduce.matches) return; e[0].isIntersecting? v.play().catch(function(){}) : v.pause(); },{threshold:.1}).observe(v);
+  }
+})();
+</script>
+</body>
+</html>
