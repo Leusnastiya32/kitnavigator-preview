@@ -213,6 +213,16 @@ footer .logo b span{color:var(--gold-light)}
 .sv-next:hover .sv-thumbs{transform:scale(1.05)}
 .sv-thumbs i{position:absolute;inset:0;opacity:0}
 .sv-next:focus-visible{outline:2px solid var(--red);outline-offset:4px;border-radius:14px}
+@media (max-width:980px){
+  .svc-stage .sv-title{font-size:clamp(44px,13vw,80px);bottom:9%}
+  .svc-stage .sv-texts{left:5%;right:5%;top:47%;bottom:13%}
+  .svc-stage .sv-text{gap:14px;justify-content:flex-start}
+  .svc-stage .sv-text h3{font-size:clamp(24px,6.6vw,32px)}
+  .svc-stage .sv-text ul{font-size:14.5px;gap:8px}
+  .svc-stage .sv-cta{margin-top:4px}
+  .svc-stage .sv-thumbs{width:84px;height:60px;border-radius:12px}
+  .svc-stage .sv-next{right:5%;bottom:2.5%;gap:10px}
+}
 
 /* КОМАНДА: бегущая лента (только если разрешено движение) */
 .team-marquee .team-viewport{position:relative;overflow:hidden;margin-top:8px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
@@ -488,7 +498,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Услуги: закреплённая сцена. Карточки из .svc-grid превращаются в слайды, на мобильных и при reduced-motion остаётся обычная сетка
   const svcSec=document.getElementById('services');
   const mmSvc=gsap.matchMedia();
-  mmSvc.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)',()=>{
+  const buildSvc=(mobile)=>{
     const cards=[...svcSec.querySelectorAll('.svc-grid .svc')];
     const items=cards.map(a=>{const b=a.querySelector('.btn');return{
       bg:a.querySelector('.svc-img .bg').getAttribute('style'),
@@ -529,9 +539,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.documentElement.style.scrollBehavior='auto';   // CSS smooth-scroll ломает прилипание ScrollTrigger
 
     // геометрия рамки в процентах сцены
-    const S0={left:'30%',top:'24%',width:'40%',height:'50%',borderRadius:24};
+    const S0=mobile?{left:'18%',top:'28%',width:'64%',height:'36%',borderRadius:22}:{left:'30%',top:'24%',width:'40%',height:'50%',borderRadius:24};
     const S1={left:'0%',top:'0%',width:'100%',height:'100%',borderRadius:0};
-    const S2={left:'5%',top:'12%',width:'56%',height:'76%',borderRadius:24};
+    const S2=mobile?{left:'5%',top:'10%',width:'90%',height:'34%',borderRadius:22}:{left:'5%',top:'12%',width:'56%',height:'76%',borderRadius:24};
     const T1=3.8, P=2.0, Tn=i=>T1+(i-1)*P;          // начало перехода к слайду i
     const total=Tn(N-1)+1.3+.5;
     const R={immediateRender:false};
@@ -590,7 +600,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       scrollTo({top:st.start+(st.end-st.start)*pts[2+j],behavior:'smooth'});
     });
     return ()=>{svcSec.classList.remove('svc-pinned');stage.remove();document.documentElement.style.scrollBehavior='';};
-  });
+  };
+  mmSvc.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)',()=>buildSvc(false));
+  mmSvc.add('(max-width: 980px) and (prefers-reduced-motion: no-preference)',()=>buildSvc(true));
 
 
   // Команда: лента движется сама, не останавливаясь; прокрутка страницы разгоняет её, наведение притормаживает
