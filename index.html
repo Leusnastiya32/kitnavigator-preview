@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>КитНавигатор — прототип сайта</title>
+<script>window.__errs=[];addEventListener("error",function(e){window.__errs.push((e.message||"resource")+(e.target&&e.target.src?" "+e.target.src.split("/").pop():""));},true);</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -675,6 +676,30 @@ document.addEventListener('DOMContentLoaded',()=>{
   if('IntersectionObserver' in window){
     new IntersectionObserver(function(e){ if(reduce.matches) return; e[0].isIntersecting? v.play().catch(function(){}) : v.pause(); },{threshold:.1}).observe(v);
   }
+})();
+</script>
+
+<script>
+/* диагностика: откройте страницу с ?debug, чтобы увидеть, почему не работает анимация */
+(function(){
+  if(!/[?&]debug/.test(location.search)) return;
+  addEventListener('load',function(){
+    setTimeout(function(){
+      var d=document.createElement('div');
+      d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:9999;background:#000;color:#0f0;font:12px/1.4 monospace;padding:10px;border-radius:8px;white-space:pre-wrap;word-break:break-all';
+      var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var pins=window.ScrollTrigger?ScrollTrigger.getAll().filter(function(t){return t.pin;}).length:'нет ScrollTrigger';
+      d.textContent=['ширина='+innerWidth+' высота='+innerHeight,
+        'reduce-motion='+rm+(rm?'  <-- анимация отключена настройкой телефона':''),
+        'gsap='+!!window.gsap+' ScrollTrigger='+!!window.ScrollTrigger,
+        'сцена услуг='+!!document.querySelector('.svc-stage')+' закреплений='+pins,
+        'лента команды='+!!document.querySelector('.team-marquee'),
+        'ошибки='+(window.__errs.length?window.__errs.join(' | '):'нет'),
+        'UA='+navigator.userAgent.slice(0,90)].join('\n');
+      d.addEventListener('click',function(){d.remove();});
+      document.body.appendChild(d);
+    },2500);
+  });
 })();
 </script>
 </body>
