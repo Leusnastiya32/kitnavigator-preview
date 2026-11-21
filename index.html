@@ -187,6 +187,37 @@ footer .logo b span{color:var(--gold-light)}
   .step .dot{top:2px}
   .team-grid{grid-template-columns:1fr 1fr 1fr}
 }
+/* УСЛУГИ: закреплённая сцена со сменой карточек (только десктоп, без reduced-motion) */
+.svc-pinned{padding:0!important}
+.svc-pinned .svc-grid{display:none}
+.svc-pinned>.wrap{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.svc-stage{position:relative;height:100vh;height:100svh;overflow:hidden;background:var(--milk)}
+.sv-frame{position:absolute;overflow:hidden;background:var(--navy);z-index:1}
+.sv-img{position:absolute;inset:0;overflow:hidden}
+.sv-in{position:absolute;inset:0}
+.sv-in .ph-cap{position:absolute;left:18px;bottom:16px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(244,239,230,.78)}
+.sv-shade{position:absolute;inset:0;z-index:3;background:linear-gradient(0deg,rgba(8,26,51,.62),rgba(8,26,51,.05) 58%);opacity:0;pointer-events:none}
+.sv-title{position:absolute;left:5%;bottom:7%;z-index:4;color:var(--milk);font-size:clamp(44px,7.4vw,120px);line-height:.94;letter-spacing:-.045em;font-weight:800;pointer-events:none}
+.sv-title em{font-style:normal;color:var(--red-on-dark)}
+.mk{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.mk>span,.mk>h3{display:block}
+.sv-texts{position:absolute;left:66%;right:5%;top:12%;bottom:12%;z-index:2}
+.sv-text{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.sv-text h3{font-size:clamp(28px,2.8vw,48px);line-height:1.02;letter-spacing:-.035em;font-weight:800;color:var(--navy)}
+.sv-text ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:clamp(15px,1.15vw,18px);color:var(--muted)}
+.sv-text li .mk>span{padding-left:20px;position:relative}
+.sv-text li .mk>span::before{content:'';position:absolute;left:0;top:.7em;width:9px;height:1.5px;background:var(--gold)}
+.sv-cta{align-self:flex-start;margin-top:8px}
+.sv-count{position:absolute;left:5%;bottom:4%;z-index:2;display:flex;gap:14px;align-items:center;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:0}
+.sv-count .roll{display:block;height:1.4em;overflow:hidden;line-height:1.4em;font-variant-numeric:tabular-nums}
+.sv-count .col{display:flex;flex-direction:column}
+.sv-count .tot{opacity:.55;margin-left:-8px}
+.sv-next{position:absolute;right:5%;bottom:4%;z-index:2;display:flex;align-items:center;gap:14px;background:none;border:0;cursor:pointer;font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:0}
+.sv-thumbs{position:relative;width:120px;height:84px;border-radius:14px;overflow:hidden;transition:transform .3s}
+.sv-next:hover .sv-thumbs{transform:scale(1.05)}
+.sv-thumbs i{position:absolute;inset:0;opacity:0}
+.sv-next:focus-visible{outline:2px solid var(--red);outline-offset:4px;border-radius:14px}
+
 @media (max-width:980px){
   .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.55) 0%,rgba(8,26,51,.72) 55%,rgba(8,26,51,.8) 100%)}
   .hero-bg video{object-position:60% 50%}
@@ -447,6 +478,121 @@ document.addEventListener('DOMContentLoaded',()=>{
     const o={v:0},s=el.dataset.suffix||'';
     ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter:()=>gsap.to(o,{v:+el.dataset.count,duration:1.6,ease:'power2.out',onUpdate:()=>el.textContent=Math.round(o.v)+s})});
   });
+
+
+  // Услуги: закреплённая сцена. Карточки из .svc-grid превращаются в слайды, на мобильных и при reduced-motion остаётся обычная сетка
+  const svcSec=document.getElementById('services');
+  const mmSvc=gsap.matchMedia();
+  mmSvc.add('(min-width: 981px) and (prefers-reduced-motion: no-preference)',()=>{
+    const cards=[...svcSec.querySelectorAll('.svc-grid .svc')];
+    const items=cards.map(a=>{const b=a.querySelector('.btn');return{
+      bg:a.querySelector('.svc-img .bg').getAttribute('style'),
+      cap:(a.querySelector('.ph-cap')||{}).textContent||'',
+      title:a.querySelector('h3').textContent,
+      bullets:[...a.querySelectorAll('li')].map(li=>li.textContent),
+      href:b.getAttribute('href'),topic:b.dataset.topic,label:b.textContent};});
+    const N=items.length, pad=n=>String(n).padStart(2,'0');
+    const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+    const mask=(child)=>{const m=el('span','mk');m.appendChild(child);return m;};
+
+    const stage=el('div','svc-stage');
+    const frame=el('div','sv-frame'), shade=el('div','sv-shade');
+    const imgs=[],ins=[];
+    items.forEach(it=>{const im=el('div','sv-img'),inn=el('div','sv-in');inn.setAttribute('style',it.bg);inn.appendChild(el('span','ph-cap',it.cap));im.appendChild(inn);frame.appendChild(im);imgs.push(im);ins.push(inn);});
+    frame.appendChild(shade);
+    const title=el('h2','sv-title');title.setAttribute('aria-hidden','true');
+    const l1=el('span',null,'Чем мы'),l2=el('span'),em=el('em',null,'занимаемся');l2.appendChild(em);
+    title.append(mask(l1),mask(l2));
+    const titleLines=[...title.querySelectorAll('.mk>span')];
+    const texts=el('div','sv-texts'),panes=[],lines=[],ctas=[];
+    items.forEach(it=>{
+      const p=el('div','sv-text'),h=el('h3',null,it.title),ul=el('ul'),ls=[mask(h)];
+      p.appendChild(ls[0]);
+      it.bullets.forEach(t=>{const li=el('li'),sp=el('span',null,t),m=mask(sp);li.appendChild(m);ul.appendChild(li);ls.push(m);});
+      p.appendChild(ul);
+      const wrap=el('div','sv-cta'),a=el('a','btn btn-line btn-sm',it.label);a.href=it.href;a.dataset.topic=it.topic;
+      a.addEventListener('click',()=>{const m=document.getElementById('m');if(m&&(!m.value||m.dataset.auto==='1')){m.value=it.topic;m.dataset.auto='1';}});
+      wrap.appendChild(a);p.appendChild(wrap);texts.appendChild(p);
+      panes.push(p);lines.push(ls.map(m=>m.firstElementChild));ctas.push(wrap);
+    });
+    const count=el('div','sv-count');count.setAttribute('aria-hidden','true');
+    const roll=el('span','roll'),col=el('span','col');
+    items.forEach((_,i)=>col.appendChild(el('span',null,pad(i+1))));
+    roll.appendChild(col);count.append(el('span',null,'Услуги'),roll,el('span','tot','/ '+pad(N)));
+    const next=el('button','sv-next');next.type='button';next.setAttribute('aria-label','Показать следующую услугу');
+    const thumbs=el('span','sv-thumbs'),tis=[];
+    items.forEach(it=>{const t=el('i');t.setAttribute('style',it.bg);thumbs.appendChild(t);tis.push(t);});
+    next.append(el('span',null,'Далее'),thumbs);
+    stage.append(frame,title,texts,count,next);
+    svcSec.appendChild(stage);svcSec.classList.add('svc-pinned');
+    document.documentElement.style.scrollBehavior='auto';   // CSS smooth-scroll ломает прилипание ScrollTrigger
+
+    // геометрия рамки в процентах сцены
+    const S0={left:'30%',top:'24%',width:'40%',height:'50%',borderRadius:24};
+    const S1={left:'0%',top:'0%',width:'100%',height:'100%',borderRadius:0};
+    const S2={left:'5%',top:'12%',width:'56%',height:'76%',borderRadius:24};
+    const T1=3.8, P=2.0, Tn=i=>T1+(i-1)*P;          // начало перехода к слайду i
+    const total=Tn(N-1)+1.3+.5;
+    const R={immediateRender:false};
+    gsap.set(frame,S0);
+    imgs.forEach((im,i)=>gsap.set(im,{clipPath:i?'inset(100% 0% 0% 0%)':'inset(0% 0% 0% 0%)'}));
+    gsap.set(lines.flat(),{yPercent:110});
+    gsap.set(titleLines,{yPercent:110});
+    gsap.set(ctas,{opacity:0,y:12});
+    gsap.set(tis,{opacity:0});
+    if(tis[1]) gsap.set(tis[1],{opacity:1});
+
+    const tl=gsap.timeline({defaults:{ease:'none'}});
+    // 1. рамка растёт до полного экрана, появляется заголовок
+    tl.fromTo(frame,S0,{...S1,duration:1,ease:'power2.inOut'},0)
+      .fromTo(ins[0],{scale:1.2},{scale:1,duration:1.6,ease:'power2.out'},0)
+      .fromTo(shade,{opacity:0},{opacity:1,duration:.6},.5)
+      .fromTo(titleLines,{yPercent:110},{yPercent:0,duration:.5,stagger:.1,ease:'power3.out',...R},.7)
+    // 2. заголовок уходит, рамка сжимается влево, справа появляется первая услуга
+      .to(titleLines,{yPercent:-110,duration:.4,stagger:.06,ease:'power3.in',...R},1.8)
+      .to(shade,{opacity:0,duration:.6,...R},1.9)
+      .fromTo(frame,S1,{...S2,duration:1,ease:'power3.inOut',...R},1.9)
+      .fromTo(lines[0],{yPercent:110},{yPercent:0,duration:.5,stagger:.07,ease:'power3.out',...R},2.6)
+      .fromTo(ctas[0],{opacity:0,y:12},{opacity:1,y:0,duration:.4,...R},3.1)
+      .fromTo([count,next],{opacity:0},{opacity:1,duration:.5,...R},2.6);
+    // 3. смена услуг
+    for(let i=1;i<N;i++){
+      const T=Tn(i);
+      tl.fromTo(lines[i-1],{yPercent:0},{yPercent:-110,duration:.4,stagger:.04,ease:'power2.in',...R},T)
+        .fromTo(ctas[i-1],{opacity:1,y:0},{opacity:0,y:-10,duration:.3,...R},T)
+        .fromTo(imgs[i],{clipPath:'inset(100% 0% 0% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:.8,ease:'power3.inOut',...R},T)
+        .fromTo(ins[i],{scale:1.18},{scale:1,duration:1.1,ease:'power2.out',...R},T)
+        .fromTo(ins[i-1],{scale:1},{scale:.94,duration:.8,ease:'power2.inOut',...R},T)
+        .fromTo(lines[i],{yPercent:110},{yPercent:0,duration:.5,stagger:.07,ease:'power3.out',...R},T+.45)
+        .fromTo(ctas[i],{opacity:0,y:12},{opacity:1,y:0,duration:.4,...R},T+.9)
+        .fromTo(col,{yPercent:-(i-1)*100/N},{yPercent:-i*100/N,duration:.5,ease:'power3.inOut',...R},T+.1)
+        .fromTo(tis[i],{opacity:1},{opacity:0,duration:.3,...R},T);
+      if(i+1<N) tl.fromTo(tis[i+1],{opacity:0},{opacity:1,duration:.4,...R},T+.35);
+      else tl.fromTo(next,{opacity:1},{opacity:0,duration:.4,...R},T);
+    }
+    tl.to({},{duration:.01},total);
+
+    // моменты, когда услуга полностью показана (stops[2+k]); к ним ведёт кнопка «Далее»
+    const stops=[0,1.5,3.4];
+    for(let k=1;k<N;k++) stops.push(Tn(k)+1.3);
+    const pts=stops.map(t=>t/total);
+    const activeAt=t=>t<2.6?-1:(t<Tn(1)+.45?0:Math.min(N-1,1+Math.floor((t-Tn(1)-.45)/P)));
+    const setActive=idx=>panes.forEach((p,i)=>{const on=i===idx;p.inert=!on;p.setAttribute('aria-hidden',on?'false':'true');});
+    setActive(-1);
+    let cur=-1;
+    const st=ScrollTrigger.create({
+      trigger:stage,start:'top top',end:()=>'+='+Math.round(innerHeight*.5*total),
+      pin:true,scrub:.6,animation:tl,anticipatePin:1,invalidateOnRefresh:true,
+      onUpdate:self=>{const idx=activeAt(self.progress*total);if(idx!==cur){cur=idx;setActive(idx);}}
+    });
+    next.addEventListener('click',()=>{
+      const j=Math.min(N-1,Math.max(0,cur)+1);
+      scrollTo({top:st.start+(st.end-st.start)*pts[2+j],behavior:'smooth'});
+    });
+    return ()=>{svcSec.classList.remove('svc-pinned');stage.remove();document.documentElement.style.scrollBehavior='';};
+  });
+
+  addEventListener('load',()=>ScrollTrigger.refresh());
 
   // шаги процесса
   const steps=gsap.utils.toArray('.step');
