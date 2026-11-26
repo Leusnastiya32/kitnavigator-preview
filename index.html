@@ -6,7 +6,8 @@
 <title>КитНавигатор — прототип сайта</title>
 <script>window.__errs=[];addEventListener("error",function(e){window.__errs.push((e.message||"resource")+(e.target&&e.target.src?" "+e.target.src.split("/").pop():""));},true);</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
@@ -59,13 +60,17 @@ h2 em{font-style:normal;color:var(--red)}
 /* HERO */
 .hero{min-height:100vh;min-height:100svh;padding:140px 0 90px;position:relative;overflow:hidden;background:var(--navy-deep);color:var(--milk)}
 .hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 50%;display:block}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,26,51,.86) 0%,rgba(8,26,51,.62) 42%,rgba(8,26,51,.18) 100%),linear-gradient(0deg,rgba(8,26,51,.55),transparent 35%),linear-gradient(180deg,rgba(8,26,51,.5),transparent 22%)}
+.hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;display:block}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,26,51,.84) 0%,rgba(8,26,51,.62) 38%,rgba(8,26,51,.18) 66%,rgba(8,26,51,0) 100%),linear-gradient(0deg,rgba(8,26,51,.45),transparent 36%),linear-gradient(180deg,rgba(8,26,51,.5),transparent 22%)}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,760px);align-items:center;min-height:calc(100vh - 230px)}
 .hero h1{font-size:clamp(40px,5.6vw,84px);line-height:.96;letter-spacing:-.045em;font-weight:800}
-.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.06em;white-space:nowrap}
+.hero h1 .ln{display:block;padding-bottom:.06em;white-space:nowrap}
 .hero h1 .ln>span{display:block}
-.hero h1{text-shadow:0 2px 28px rgba(8,26,51,.35)}
+.hero h1{text-shadow:0 2px 28px rgba(8,26,51,.5)}
+.hero .lead{text-shadow:0 1px 14px rgba(8,26,51,.6)}
+/* плавное появление текста на восходе; при «уменьшении движения» текст виден сразу */
+.hero [data-in]{animation:heroRise 1.3s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--d)}
+@keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .hero h1 em{font-style:normal;color:var(--red-on-dark)}
 .hero .lead{margin:26px 0 34px;font-size:20px;color:rgba(244,239,230,.9);max-width:520px}
 .hero .btn-line{border-color:rgba(244,239,230,.7);color:var(--milk)}
@@ -235,8 +240,15 @@ footer .logo b span{color:var(--gold-light)}
 .team-ctl button:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:6px}
 
 @media (max-width:980px){
-  .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.55) 0%,rgba(8,26,51,.72) 55%,rgba(8,26,51,.8) 100%)}
-  .hero-bg video{object-position:60% 50%}
+  .hero{padding-top:108px}
+  .hero .wrap{align-items:start;align-content:start}
+  .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.8) 0%,rgba(8,26,51,.7) 40%,rgba(8,26,51,.5) 54%,rgba(8,26,51,.04) 66%,rgba(8,26,51,0) 78%,rgba(8,26,51,.55) 100%)}
+  .hero-bg video{object-position:55% 50%}
+  .hero .btn-line{background:rgba(8,26,51,.5)}
+}
+@media (max-width:620px) and (max-height:700px){
+  .hero{padding-top:94px}
+  .hero .lead{margin:16px 0 20px;font-size:17px}
 }
 @media (max-width:620px){
   .wrap{padding:0 20px}.sec{padding:76px 0}
@@ -248,6 +260,30 @@ footer .logo b span{color:var(--gold-light)}
   .proto-bar{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== шрифт «Классика»: заголовок первого блока и название ===== */
+.hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.005em;line-height:1.02;font-size:clamp(43px,6.6vw,100px)}
+.hero h1 em{font-style:italic}
+.hero .lead{font-weight:300}
+.hero .btn{font-weight:500}
+.logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;letter-spacing:.005em}
+.logo b{font-weight:600}
+footer .logo{font-size:22px}
+@media (max-width:620px){.hero .lead{font-weight:400}}
+/* ===== текст первого блока: «Золотой свет» ===== */
+.hero{--p:0}                                   /* 0 = верх страницы, 1 = текст ушёл */
+.hero h1 .w{white-space:nowrap}
+.hero h1 .w,.hero h1 .c,.hero h1 .i{display:inline-block}
+.hero h1 .i{animation:txtGold 1.35s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(.35s + var(--n) * .062s)}
+@keyframes txtGold{
+  0%{opacity:0;transform:translateY(.34em) scale(1.22);color:#fff3d0;text-shadow:0 0 14px #ffd27a,0 0 36px #ff9d2e}
+  42%{opacity:1;color:#ffdc8c;text-shadow:0 0 16px rgba(255,200,100,.95),0 0 44px rgba(255,150,40,.75)}
+  100%{opacity:1;transform:none}
+}
+.hero h1 .c{
+  transform:translateY(calc(var(--p) * (var(--n) * -2.6px - 24px)));
+  opacity:calc(1 - var(--p) * (1.15 + var(--r)));
+  color:color-mix(in srgb,#ffd58a calc(min(1, var(--p) * 2.4) * 100%),currentColor)}
+.hero .after{opacity:calc(1 - var(--p) * 1.35);transform:translateY(calc(var(--p) * 36px))}
 </style>
 </head>
 <body>
@@ -278,22 +314,55 @@ footer .logo b span{color:var(--gold-light)}
 
 <!-- Главный экран -->
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true"><video id="heroVideo" src="assets/hero-v6.mp4" poster="assets/hero-poster-v5.webp" autoplay muted loop playsinline preload="auto" tabindex="-1"></video></div>
+  <div class="hero-bg" aria-hidden="true"><video id="heroVideo" src="assets/hero-sunrise.mp4" poster="assets/hero-sunrise-first.webp" data-last="assets/hero-sunrise-last.webp" autoplay muted playsinline preload="auto" tabindex="-1"></video></div>
   <div class="wrap">
     <div>
       <h1>
-        <span class="ln"><span>Ваш проводник</span></span>
-        <span class="ln"><span>в мире <em>китайских</em></span></span>
-        <span class="ln"><span>возможностей</span></span>
+        <span class="ln"><span><span class="w" style="--i:0">Ваш</span> <span class="w" style="--i:1">проводник</span></span></span>
+        <span class="ln"><span><span class="w" style="--i:2">в&nbsp;мире</span> <em><span class="w" style="--i:3">китайских</span></em></span></span>
+        <span class="ln"><span><span class="w" style="--i:4">возможностей</span></span></span>
       </h1>
-      <p class="lead" data-fade>Находим производителей в Китае, ведём переговоры, организуем поездки и поставки.</p>
-      <div class="cta" data-fade>
+      <div class="after">
+      <p class="lead" data-in style="--d:2.55s">Находим производителей в Китае, ведём переговоры, организуем поездки и поставки.</p>
+      <div class="cta" data-in style="--d:2.9s">
         <a class="btn btn-red" href="#contacts">Обсудить проект <svg class="ico"><use href="#i-arrow"/></svg></a>
         <a class="btn btn-line" href="#services">Услуги</a>
+      </div>
       </div>
     </div>
       </div>
 </section>
+<script>
+(function(){
+  var hero=document.querySelector('.hero'), h1=hero.querySelector('h1'), n=0;
+  h1.setAttribute('aria-label',h1.textContent.replace(/\s+/g,' ').trim());    // для экранного диктора заголовок цельный
+  function rnd(i){var x=Math.sin(i*12.9898+78.233)*43758.5453;return x-Math.floor(x);}
+  [].forEach.call(h1.querySelectorAll('.ln'),function(l){l.setAttribute('aria-hidden','true');});
+  [].forEach.call(h1.querySelectorAll('.w'),function(w){
+    var text=w.textContent; w.textContent='';
+    text.split('').forEach(function(ch){
+      if(/\s/.test(ch)){w.appendChild(document.createTextNode('\u00a0'));return;}
+      var c=document.createElement('span'), i=document.createElement('span');
+      c.className='c'; i.className='i'; i.textContent=ch;
+      c.style.setProperty('--n',n); c.style.setProperty('--r',rnd(n).toFixed(3));
+      c.appendChild(i); w.appendChild(c); n++;
+    });
+  });
+
+  // уход текста привязан к прокрутке и обратим; значение догоняет прокрутку плавно
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)'), cur=0, goal=0, raf=0;
+  function step(){
+    cur+=(goal-cur)*.16; if(Math.abs(goal-cur)<.002) cur=goal;
+    hero.style.setProperty('--p',cur.toFixed(4));
+    raf=cur===goal?0:requestAnimationFrame(step);
+  }
+  function onScroll(){
+    goal=reduce.matches?0:Math.min(1,Math.max(0,(scrollY-6)/(hero.offsetHeight*.52)));
+    if(!raf) raf=requestAnimationFrame(step);
+  }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll); onScroll();
+})();
+</script>
 
 <!-- О компании -->
 <section class="sec" id="about" style="padding-top:50px">
@@ -484,11 +553,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // главный экран
-  gsap.timeline({defaults:{ease:'power4.out'}})
-    .from('.hero h1 .ln>span',{yPercent:110,duration:1.1,stagger:.12})
-    .from('.hero [data-fade]',{opacity:0,y:24,duration:.9,stagger:.1},'-=.6');
-
   // счётчики
   document.querySelectorAll('[data-count]').forEach(el=>{
     const o={v:0},s=el.dataset.suffix||'';
@@ -671,10 +735,15 @@ document.addEventListener('DOMContentLoaded',()=>{
 (function(){
   var v=document.getElementById('heroVideo'); if(!v) return;
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
-  function sync(){ if(reduce.matches){v.pause();v.removeAttribute('autoplay');} else {v.play().catch(function(){});} }
+  var src=v.getAttribute('src'), first=v.getAttribute('poster');
+  function play(){ if(!v.ended) v.play().catch(function(){}); }   // play() после конца начал бы ролик заново
+  function sync(){
+    if(reduce.matches){v.pause();v.removeAttribute('autoplay');v.removeAttribute('src');v.poster=v.dataset.last;v.load();}
+    else { if(!v.getAttribute('src')){v.poster=first;v.src=src;} play(); }
+  }
   sync(); if(reduce.addEventListener) reduce.addEventListener('change',sync);
   if('IntersectionObserver' in window){
-    new IntersectionObserver(function(e){ if(reduce.matches) return; e[0].isIntersecting? v.play().catch(function(){}) : v.pause(); },{threshold:.1}).observe(v);
+    new IntersectionObserver(function(e){ if(reduce.matches) return; e[0].isIntersecting? play() : v.pause(); },{threshold:.1}).observe(v);
   }
 })();
 </script>
