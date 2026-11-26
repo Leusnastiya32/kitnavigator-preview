@@ -55,13 +55,22 @@ h2 em{font-style:normal;color:var(--red)}
 .nav ul a{position:relative;padding:4px 0}
 .nav ul a::after{content:'';position:absolute;left:0;bottom:0;height:1.5px;width:0;background:var(--red);transition:width .3s}
 .nav ul a:hover::after{width:100%}
-.nav .tel{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center}
+.nav .tel{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;min-height:44px}
+.nav-act{display:flex;align-items:center;gap:6px}
+.burger{display:none}
+.burger .i-close,.burger[aria-expanded="true"] .i-open{display:none}
+.burger[aria-expanded="true"] .i-close{display:block}
+.nav .burger:focus-visible,.nav .tel:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:10px}
 
 /* HERO */
 .hero{min-height:100vh;min-height:100svh;padding:140px 0 90px;position:relative;overflow:hidden;background:var(--navy-deep);color:var(--milk)}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-bg video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 50%;display:block}
-.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,26,51,.84) 0%,rgba(8,26,51,.62) 38%,rgba(8,26,51,.18) 66%,rgba(8,26,51,0) 100%),linear-gradient(0deg,rgba(8,26,51,.45),transparent 36%),linear-gradient(180deg,rgba(8,26,51,.5),transparent 22%)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,26,51,.86) 0%,rgba(8,26,51,.76) 40%,rgba(8,26,51,.62) 60%,rgba(8,26,51,.12) 82%,rgba(8,26,51,0) 100%),linear-gradient(0deg,rgba(8,26,51,.45),transparent 36%),linear-gradient(180deg,rgba(8,26,51,.68),transparent 22%)}
+@media (min-width:981px) and (max-width:1200px){
+  /* на узком мониторе заголовок занимает больше половины кадра */
+  .hero-bg::after{background:linear-gradient(90deg,rgba(8,26,51,.86) 0%,rgba(8,26,51,.76) 55%,rgba(8,26,51,.62) 74%,rgba(8,26,51,.1) 100%),linear-gradient(0deg,rgba(8,26,51,.45),transparent 36%),linear-gradient(180deg,rgba(8,26,51,.68),transparent 22%)}
+}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,760px);align-items:center;min-height:calc(100vh - 230px)}
 .hero h1{font-size:clamp(40px,5.6vw,84px);line-height:.96;letter-spacing:-.045em;font-weight:800}
 .hero h1 .ln{display:block;padding-bottom:.06em;white-space:nowrap}
@@ -71,7 +80,7 @@ h2 em{font-style:normal;color:var(--red)}
 /* плавное появление текста на восходе; при «уменьшении движения» текст виден сразу */
 .hero [data-in]{animation:heroRise 1.3s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--d)}
 @keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-.hero h1 em{font-style:normal;color:var(--red-on-dark)}
+.hero h1 em{font-style:normal;color:#ff8793}              /* чуть светлее --red-on-dark: под словом восход */
 .hero .lead{margin:26px 0 34px;font-size:20px;color:rgba(244,239,230,.9);max-width:520px}
 .hero .btn-line{border-color:rgba(244,239,230,.7);color:var(--milk)}
 .hero .btn-line:hover{background:var(--milk);color:var(--navy)}
@@ -100,26 +109,6 @@ h2 em{font-style:normal;color:var(--red)}
 .svc li::before{content:'';position:absolute;left:0;top:.7em;width:8px;height:1.5px;background:var(--gold)}
 .svc .btn{margin-top:auto;align-self:flex-start}
 
-/* CASES */
-.cases{background:var(--milk-2)}
-.case-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px}
-.case{display:flex;flex-direction:column;gap:14px}
-.case:nth-child(1){grid-column:span 4}.case:nth-child(2){grid-column:span 2}
-.case:nth-child(3){grid-column:span 2}.case:nth-child(4){grid-column:span 4}
-.case:nth-child(5),.case:nth-child(6){grid-column:span 3}
-.case-img{position:relative;height:240px;border-radius:var(--r);overflow:hidden}
-.case:nth-child(2) .case-img,.case:nth-child(3) .case-img{height:240px}
-.case-img .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
-.case:hover .case-img .bg{transform:scale(1.07)}
-.case h3{font-size:clamp(19px,1.9vw,24px);line-height:1.2;letter-spacing:-.02em;font-weight:700}
-.case .tag{align-self:flex-start;font-size:13px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
-
-/* CONSULT */
-.consult{padding:0 0 110px}
-.consult-box{background:var(--navy);color:var(--milk);border-radius:var(--r);padding:44px 52px;display:flex;align-items:center;justify-content:space-between;gap:32px}
-.consult-box h3{font-size:clamp(26px,3.2vw,40px);line-height:1.05;letter-spacing:-.03em;font-weight:800;max-width:520px}
-.consult-box p{color:rgba(244,239,230,.75);margin-top:10px}
-.consult-box .btn{white-space:nowrap}
 
 /* PROCESS */
 
@@ -144,14 +133,19 @@ footer .logo b span{color:var(--gold-light)}
 .proto-bar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:99;background:var(--graphite);color:#fff;font-size:12px;padding:8px 16px;border-radius:999px;opacity:.9;pointer-events:none;white-space:nowrap}
 
 @media (max-width:980px){
-  .nav ul{display:none}
+  /* меню: панель под шапкой, открывается кнопкой */
+  .nav .wrap{gap:12px}
+  .burger:not([hidden]){display:grid;place-items:center;width:44px;height:44px;margin-right:-9px;border:0;background:none;color:inherit;cursor:pointer}
+  .burger .ico{width:26px;height:26px}
+  .nav-menu{position:absolute;left:0;right:0;top:100%;max-height:calc(100svh - 76px);overflow-y:auto;background:var(--milk);color:var(--navy);box-shadow:0 26px 40px -24px rgba(8,26,51,.6);visibility:hidden;opacity:0;transform:translateY(-8px);transition:opacity .2s,transform .2s,visibility 0s .2s}
+  .nav.open .nav-menu{visibility:visible;opacity:1;transform:none;transition:opacity .3s cubic-bezier(.22,1,.36,1),transform .35s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .nav .nav-menu ul{display:block;padding:4px 32px 12px;font-size:17px}
+  .nav-menu li+li{border-top:1px solid var(--line)}
+  .nav .nav-menu ul a{display:flex;align-items:center;min-height:52px;padding:0}
+  .nav .nav-menu ul a::after{display:none}
   .hero h1 .ln{white-space:normal}
   .stats{gap:28px}
   .svc-grid{grid-template-columns:1fr 1fr}
-  .case-grid{grid-template-columns:1fr 1fr}
-  .case:nth-child(n){grid-column:span 1}
-  .case:nth-child(1){grid-column:span 2}
-  .consult-box{flex-direction:column;align-items:flex-start;padding:36px 28px}
   .team-grid{grid-template-columns:1fr 1fr 1fr}
 }
 /* УСЛУГИ: закреплённая сцена со сменой карточек (только десктоп, без reduced-motion) */
@@ -173,16 +167,37 @@ footer .logo b span{color:var(--gold-light)}
 @media (max-width:620px) and (max-height:700px){
   .hero{padding-top:94px}
   .hero .lead{margin:16px 0 20px;font-size:17px}
+  /* на низком телефоне текст занимает весь экран: тень опускается вместе с ним */
+  .hero-bg::after{background:linear-gradient(180deg,rgba(8,26,51,.82) 0%,rgba(8,26,51,.78) 62%,rgba(8,26,51,.62) 74%,rgba(8,26,51,.1) 90%,rgba(8,26,51,.55) 100%)}
 }
 @media (max-width:620px){
   .wrap{padding:0 20px}.sec{padding:76px 0}
-  .svc-grid,.case-grid{grid-template-columns:1fr}
-  .case:nth-child(n){grid-column:span 1}
+  .svc-grid{grid-template-columns:1fr}
   .team-grid{grid-template-columns:1fr 1fr}
   .stats{grid-template-columns:1fr 1fr}
   .nav .tel span{display:none}
+  .nav .tel{width:44px;justify-content:center}
+  .nav .tel .ico{width:22px;height:22px}
+  .nav .nav-menu ul{padding:4px 20px 12px}
   }
+@media (max-width:360px){
+  /* название и две кнопки помещаются в строку на самом узком телефоне */
+  .nav .wrap{gap:8px}
+  .nav .logo{font-size:22px;gap:8px}
+  .nav .logo .mark{width:34px;height:34px}
+  .nav-act{gap:2px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== пауза: одна кнопка останавливает всё, что движется само ===== */
+.motion-btn:not([hidden]){position:absolute;z-index:2;right:max(20px,calc(50% - 568px));bottom:28px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid rgba(244,239,230,.55);border-radius:50%;background:rgba(8,26,51,.62);color:#f4efe6;cursor:pointer;transition:background .3s,border-color .3s}
+.motion-btn:hover{background:rgba(8,26,51,.88);border-color:#f4efe6}
+.hero .motion-btn:focus-visible{outline:2px solid #f4efe6;outline-offset:3px}
+.motion-btn .ico{width:18px;height:18px}
+.motion-btn .i-play,.still .motion-btn .i-pause{display:none}
+.still .motion-btn .i-play{display:block}
+.still .tm-fog,.still .lm::before,.still .lm .lm-frame,.still .fin::after,.still .hw .hw-lamp,.still .hw .hw-lamp::before{animation-play-state:paused!important}
+.still .wd .wd-bar{animation:none!important}              /* без анимации услуги не листаются, а черта выбранной остаётся полной */
+.still .wd[data-view="3"] .wd-photo{transition:opacity 1.3s ease;transform:none}
 /* ===== шрифт «Классика»: заголовок первого блока и название ===== */
 .hero h1{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.005em;line-height:1.02;font-size:clamp(43px,6.6vw,100px)}
 .hero h1 em{font-style:italic}
@@ -416,7 +431,6 @@ footer .logo{font-size:22px}
 .lm.anim .lm-dirs li{transition:opacity .9s var(--ease),transform 1.1s var(--ease),filter 1s;transition-delay:calc(1.35s + var(--k) * .16s)}
 .lm.anim:not(.in) .lm-dirs li{opacity:0;transform:translateY(22px)}
 
-/* --- 2. По центру: как команда. Портрет посередине, направления по сторонам, всё из тумана --- */
 .lm[data-v="2"]::before{content:'';position:absolute;z-index:-1;inset:-20%;background:radial-gradient(26% 32% at 50% 40%,rgba(120,160,220,.24),transparent 70%),radial-gradient(34% 26% at 30% 76%,rgba(190,205,230,.14),transparent 70%),radial-gradient(30% 24% at 74% 70%,rgba(255,200,150,.13),transparent 70%);animation:lmMist 18s ease-in-out infinite alternate}
 @keyframes lmMist{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
 .lm[data-v="2"]{padding:100px 0 56px}
@@ -576,7 +590,6 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
 .hw-info ul li{position:relative;padding-left:18px}
 .hw-info ul li::before{content:'';position:absolute;left:0;top:.7em;width:9px;height:1px;background:#e2c27e}
 
-/* --- 2. Фонари: загораются по очереди, как шаги пути --- */
 .hw[data-way="2"]{background:radial-gradient(90% 70% at 50% 0%,rgba(120,40,40,.34),transparent 70%),#081a33}
 .hw[data-way="2"] .hw-stage{margin-top:26px}
 .hw[data-way="2"] .hw-stage::before{content:'';position:absolute;left:4%;right:4%;top:0;height:1px;background:rgba(226,194,126,.45)}
@@ -633,11 +646,251 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
 }
 @media (prefers-reduced-motion:reduce){.hw .hw-lamp::before{animation:none!important}}
 @media (max-width:760px){.hw{padding-top:92px}}
+
+/* ===== Наши проекты ===== */
+.pj{--ease:cubic-bezier(.22,1,.36,1);--time:9s;--edge:max(32px,calc((100vw - 1136px)/2));position:relative;overflow:hidden;isolation:isolate;padding:92px 0 56px;background:#081a33;color:#f4efe6}
+.pj::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(58% 52% at 80% 6%,rgba(214,150,66,.17),transparent 70%),radial-gradient(52% 58% at 4% 98%,rgba(200,16,46,.13),transparent 70%)}
+.pj h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(42px,5vw,72px);line-height:1.04;letter-spacing:-.005em;text-align:center;max-width:none;margin:0 auto 30px}
+.pj h2 em{font-style:italic;color:var(--red-on-dark)}
+.pj-list{list-style:none;margin:0;padding:0}
+.pj-shot{display:flex;flex-direction:column;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pj-shot:focus-visible{outline:2px solid #ffd98a;outline-offset:3px;border-radius:10px}
+.pj-pic{display:block;position:relative;overflow:hidden;border-radius:14px;background:#10284a}
+.pj-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 50%);-webkit-user-drag:none;user-select:none}
+.pj-bar{display:block;position:relative;height:2px;overflow:hidden;background:rgba(244,239,230,.18)}
+.pj-bar::after{content:'';position:absolute;inset:0;background:#e2c27e;transform:scaleX(0);transform-origin:left}
+.pj.paused .pj-bar::after,.pj.reading .pj-bar::after,.still .pj .pj-bar::after{animation-play-state:paused!important}
+.pj-info{display:flex;flex-direction:column;gap:14px}
+.pj-info p{margin:0}
+.pj-tag{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#e2c27e}
+.pj-info h3{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(28px,2.9vw,40px);line-height:1.08;letter-spacing:0;text-wrap:balance}
+.pj-text{font-size:16px;line-height:1.62;color:rgba(244,239,230,.88)}
+.pj-res{padding-top:13px;border-top:1px solid rgba(226,194,126,.38);font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:24px;line-height:1.2;color:#ffd98a;text-wrap:balance}
+.pj-info .btn{align-self:flex-start}
+.pj-infos{display:grid}
+.pj-infos .pj-info{grid-area:1/1;opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+.pj-infos .pj-info.on{opacity:1;visibility:visible;transition:opacity .35s .22s,visibility 0s .22s}
+.pj.anim.seen .pj-infos .pj-info.on>*{animation:pjUp .7s var(--ease) .24s both}
+.pj.anim.seen .pj-infos .pj-info.on>:nth-child(2){animation-delay:.31s}
+.pj.anim.seen .pj-infos .pj-info.on>:nth-child(3){animation-delay:.38s}
+.pj.anim.seen .pj-infos .pj-info.on>:nth-child(4){animation-delay:.45s}
+.pj.anim.seen .pj-infos .pj-info.on>:nth-child(5){animation-delay:.52s}
+@keyframes pjUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pjBar{to{transform:scaleX(1)}}
+@keyframes pjZoom{from{transform:scale(1.001)}to{transform:scale(1.07)}}
+
+/* --- 1. Створки --- */
+.pj[data-pj="1"] .pj-big{display:none}
+.pj[data-pj="1"] .pj-list{display:flex;gap:10px;height:clamp(270px,calc(100svh - 476px),440px)}
+.pj[data-pj="1"] .pj-item{flex:1 1 0;min-width:0;transition:flex-grow .85s var(--ease)}
+.pj[data-pj="1"] .pj-item.on{flex-grow:5.4}
+.pj[data-pj="1"] .pj-shot{height:100%}
+.pj[data-pj="1"] .pj-pic{flex:1;min-height:0}
+.pj[data-pj="1"] .pj-pic img{filter:saturate(.5) brightness(.66);transition:filter .6s}
+.pj[data-pj="1"] .pj-shot:hover img{filter:saturate(.85) brightness(.88)}
+.pj[data-pj="1"] .pj-item.on img{filter:none}
+.pj.anim[data-pj="1"] .pj-item.on img{animation:pjZoom 10s ease-out both}
+.pj[data-pj="1"] .pj-bar{margin:12px 0 9px}
+.pj[data-pj="1"]:not(.manual) .pj-item.on .pj-bar::after{animation:pjBar var(--time) linear both}
+.pj[data-pj="1"].manual .pj-item.on .pj-bar::after{transform:none}
+.pj-label{display:block;font-size:13px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:rgba(244,239,230,.76);transition:color .3s}
+.pj-item.on .pj-label{color:#ffd98a}
+.pj[data-pj="1"] .pj-infos{margin-top:28px}
+.pj[data-pj="1"] .pj-info{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);grid-template-rows:auto auto 1fr;column-gap:56px;row-gap:12px;align-content:start}
+.pj[data-pj="1"] .pj-tag{display:none}                      /* тема уже подписана под фото */
+.pj[data-pj="1"] .pj-info h3{grid-column:1;grid-row:1/3}
+.pj[data-pj="1"] .pj-info .btn{grid-column:1;grid-row:3;align-self:start;justify-self:start;margin-top:6px}
+.pj[data-pj="1"] .pj-text{grid-column:2;grid-row:1/3}
+.pj[data-pj="1"] .pj-res{grid-column:2;grid-row:3;align-self:start}
+.pj.anim[data-pj="1"] .pj-item{opacity:0;transform:translateY(46px)}
+.pj.anim.seen[data-pj="1"] .pj-item{opacity:1;transform:none;transition:flex-grow .85s var(--ease),opacity .7s calc(var(--k)*90ms),transform .9s var(--ease) calc(var(--k)*90ms)}
+
+/* низкий экран ноутбука */
+@media (min-width:761px) and (max-height:760px){
+  .pj{padding:80px 0 26px}
+  .pj h2{font-size:46px;margin-bottom:18px}
+  .pj[data-pj="1"] .pj-list{height:max(210px,calc(100svh - 408px))}
+  .pj[data-pj="1"] .pj-infos{margin-top:18px}
+  .pj .pj-info h3{font-size:29px}
+  .pj .pj-text{font-size:14.5px;line-height:1.5}
+  .pj .pj-res{font-size:20px;padding-top:9px}
+  .pj .pj-info{gap:9px}
+  .pj .pj-info .btn{padding:9px 18px}
+}
+
+/* узкий компьютер и планшет */
+@media (max-width:1020px){
+  .pj[data-pj="1"] .pj-info{column-gap:30px}
+}
+@media (min-width:761px) and (max-width:900px){
+  /* на узком планшете подпись помещается только под раскрытым фото */
+  .pj[data-pj="1"] .pj-item:not(.on) .pj-label{visibility:hidden}
+}
+@media (max-width:760px){
+  .pj{--edge:20px;padding:84px 0 40px}
+  .pj h2{font-size:42px;margin-bottom:18px}
+  .pj .pj-info h3{font-size:27px}
+  .pj .pj-text{font-size:15px;line-height:1.52}
+  .pj .pj-res{font-size:21px;padding-top:10px}
+  .pj .pj-info{gap:10px}
+  /* 1: крупный кадр сверху, шесть маленьких в одну строку под ним */
+  .pj[data-pj="1"] .pj-big{display:block;position:relative;aspect-ratio:4/3;max-height:42svh;width:100%;overflow:hidden;border-radius:14px;background:#10284a;touch-action:pan-y}
+  .pj[data-pj="1"] .pj-big img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;clip-path:inset(0 0 0 100%);transition:opacity .4s .5s,clip-path 0s .8s}
+  .pj[data-pj="1"] .pj-big img.on{z-index:1;opacity:1;clip-path:inset(0);transition:clip-path .75s var(--ease)}
+  .pj[data-pj="1"] .pj-list{height:auto;gap:6px;margin-top:8px}
+  .pj[data-pj="1"] .pj-item,.pj[data-pj="1"] .pj-item.on{flex-grow:1}
+  .pj[data-pj="1"] .pj-pic{flex:none;height:46px;border-radius:8px}
+  .pj[data-pj="1"] .pj-item.on .pj-pic{box-shadow:0 0 0 2px #e2c27e}
+  .pj[data-pj="1"] .pj-list{padding:2px}
+  .pj[data-pj="1"] .pj-bar{margin:6px 0 0}
+  .pj[data-pj="1"] .pj-label{display:none}
+  .pj[data-pj="1"] .pj-infos{margin-top:16px}
+  .pj[data-pj="1"] .pj-info{display:flex}
+  .pj[data-pj="1"] .pj-info .btn{margin-top:4px}
+}
+@media (max-width:760px) and (max-height:700px){
+  .pj{padding:78px 0 26px}
+  .pj h2{font-size:32px;margin-bottom:10px}
+  .pj .pj-info h3{font-size:22px}
+  .pj .pj-text{font-size:13.5px;line-height:1.42}
+  .pj .pj-res{font-size:18px;padding-top:7px}
+  .pj .pj-info{gap:7px}
+  .pj .pj-info .btn{padding:9px 18px;font-size:13.5px}
+  .pj[data-pj="1"] .pj-big{max-height:27svh}
+  .pj[data-pj="1"] .pj-pic{height:40px}
+  .pj[data-pj="1"] .pj-infos{margin-top:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .pj *,.pj *::before,.pj *::after{animation:none!important;transition:none!important}
+}
+
+/* --- проекты в стиле первого блока: тот же шрифт, начертания, розовый, кнопка и «Золотой свет» --- */
+.pj h2{text-shadow:0 2px 28px rgba(8,26,51,.65)}
+.pj h2 em{color:#ff8793}
+.pj-w{display:inline-block;white-space:nowrap}
+.pj-w .c{display:inline-block}
+.pj.anim:not(.seen) .pj-w .c{opacity:0}
+.pj.anim.seen .pj-w .c{animation:txtGold 1.35s var(--ease) both;animation-delay:calc(.2s + var(--n) * .062s)}
+@media (min-width:1021px){.pj[data-pj="1"] .pj-info{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)}}
+@media (min-width:761px) and (min-height:761px){.pj[data-pj="1"] .pj-list{height:clamp(270px,calc(100svh - 510px),440px)}}
+.pj .pj-info h3{font-weight:500;font-size:clamp(32px,3.2vw,46px);line-height:1.05;letter-spacing:-.005em;text-shadow:0 2px 22px rgba(8,26,51,.6)}
+.pj.anim.seen .pj-infos .pj-info.on>h3{animation:pjGold 1.4s var(--ease) .26s both}
+@keyframes pjGold{0%{opacity:0;transform:translateY(18px);color:#fff3d0;text-shadow:0 0 14px #ffd27a,0 0 34px #ff9d2e}45%{opacity:1;color:#ffdc8c;text-shadow:0 0 14px rgba(255,200,100,.85),0 0 36px rgba(255,150,40,.6)}100%{opacity:1;transform:none}}
+.pj .pj-text{font-weight:300;font-size:17px;line-height:1.6;color:rgba(244,239,230,.94);text-shadow:0 1px 14px rgba(8,26,51,.75)}
+.pj .pj-res{font-style:italic;font-weight:500;font-size:28px;text-shadow:0 1px 16px rgba(8,26,51,.7)}
+.pj .pj-info .btn{padding:15px 26px;font-size:15px;font-weight:500}
+@media (max-width:1020px){.pj .pj-info h3{font-size:clamp(28px,3.6vw,36px)}}
+@media (min-width:761px) and (max-height:760px){
+  .pj .pj-info h3{font-size:32px}
+  .pj .pj-text{font-size:15px;line-height:1.5}
+  .pj .pj-res{font-size:23px}
+  .pj .pj-info .btn{padding:11px 22px;font-size:14px}
+}
+@media (max-width:760px){
+  .pj .pj-info h3{font-size:29px}
+  .pj .pj-text{font-size:15px;line-height:1.52}
+  .pj .pj-res{font-size:23px}
+  .pj .pj-info .btn{padding:13px 22px;font-size:14.5px}
+}
+@media (max-width:620px){.pj .pj-text{font-weight:400}}
+@media (max-width:760px) and (max-height:700px){
+  .pj .pj-info h3{font-size:23px}
+  .pj .pj-text{font-size:13.5px;line-height:1.42}
+  .pj .pj-res{font-size:19px}
+  .pj .pj-info .btn{padding:10px 18px;font-size:13.5px}
+}
+
+/* слева название и итог, справа описание и кнопка: обе пары стоят на одном уровне */
+@media (min-width:761px){
+  .pj[data-pj="1"] .pj-info{grid-template-rows:auto auto;row-gap:18px;align-items:start}
+  .pj[data-pj="1"] .pj-info h3{grid-column:1;grid-row:1}
+  .pj[data-pj="1"] .pj-res{grid-column:1;grid-row:2;padding-top:0;border-top:0;align-self:center}
+  .pj[data-pj="1"] .pj-text{grid-column:2;grid-row:1}
+  .pj[data-pj="1"] .pj-info .btn{grid-column:2;grid-row:2;margin-top:0}
+}
+@media (min-width:761px) and (max-height:760px){.pj[data-pj="1"] .pj-info{row-gap:10px}}
+
+/* --- задний план: картинка медленно «дышит», сверху и снизу уходит в цвет соседних блоков --- */
+.pj::before{content:none}
+.pj-back{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.pj-back img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0;filter:brightness(1.24) saturate(1.18);transform-origin:50% 0;opacity:0;transition:opacity .9s ease;animation:pjDrift 34s ease-in-out infinite alternate}
+.pj-back img.on{opacity:1}
+.pj-back img[data-bg="harbor"]{object-position:50% 92%}           /* очертания города поднимаются над фото */
+.pj-back::after{content:'';position:absolute;inset:0;background:radial-gradient(46% 34% at 6% 100%,rgba(200,16,46,.2),transparent 72%),radial-gradient(52% 40% at 96% 96%,rgba(226,162,78,.17),transparent 72%),linear-gradient(180deg,#081a33 0%,rgba(8,26,51,.06) 11%,rgba(8,26,51,.1) 52%,rgba(8,26,51,.4) 76%,rgba(8,26,51,.66) 100%)}
+@keyframes pjDrift{from{transform:scale(1.01)}to{transform:scale(1.12) translate3d(-1.4%,0,0)}}
+.pj.paused .pj-back img,.still .pj .pj-back img{animation-play-state:paused!important}
+
+@media (max-width:760px){
+  /* на телефоне картинка занимает верх блока: пагода, сосна и башни видны у заголовка, а не прячутся за фото */
+  .pj-back img{height:47%;object-position:90% 0;-webkit-mask-image:linear-gradient(#000 66%,transparent);mask-image:linear-gradient(#000 66%,transparent)}
+  .pj-back img[data-bg="harbor"]{top:34px;object-position:20% 0}
+}
+
+/* ===== «Не уверены, какая услуга нужна?» ===== */
+.ask{--ease:cubic-bezier(.22,1,.36,1);--mx:0;--my:0;position:relative;overflow:hidden;isolation:isolate;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:clamp(600px,calc(100svh - 40px),820px);padding:104px 24px 72px;background:#081a33;color:#f4efe6;text-align:center}
+.ask-scene{position:absolute;inset:0;z-index:-1;overflow:hidden}
+.ask-bg{position:absolute;inset:-2% -2% 0;width:104%;height:102%;object-fit:cover;opacity:0;transition:opacity .9s ease;translate:calc(var(--mx) * -14px) calc(var(--my) * -8px);animation:askBreathe 30s ease-in-out infinite alternate}
+.ask[data-ask="1"] .ask-bg[data-for="1"]{opacity:1}
+@keyframes askBreathe{from{transform:scale(1)}to{transform:scale(1.07)}}
+.ask-scene::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg,#081a33 0%,rgba(8,26,51,0) 12%,rgba(8,26,51,0) 86%,#081a33 100%)}
+.ask-text{position:relative;display:flex;flex-direction:column;align-items:center;max-width:900px;transition:translate .8s var(--ease)}
+.ask-text::before{content:'';position:absolute;z-index:-1;inset:-70px -120px;background:radial-gradient(closest-side,rgba(8,26,51,.72),rgba(8,26,51,.44) 55%,rgba(8,26,51,0));pointer-events:none}
+.ask h2{margin:0;max-width:none;font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(40px,6vw,86px);line-height:1.04;letter-spacing:-.005em;text-shadow:0 2px 28px rgba(8,26,51,.75)}
+.ask h2 em{font-style:italic;color:#ff8793}
+.ask-w{display:inline-block;white-space:nowrap}
+.ask-w .c{display:inline-block}
+.ask.anim:not(.seen) .ask-w .c{opacity:0}
+.ask.anim.seen .ask-w .c{animation:txtGold 1.35s var(--ease) both;animation-delay:calc(.2s + var(--n) * .045s)}
+.ask-lead{text-wrap:balance;margin:22px 0 32px;font-size:20px;font-weight:300;color:rgba(244,239,230,.94);text-shadow:0 1px 14px rgba(8,26,51,.85)}
+.ask .btn{font-weight:500;font-size:16px;padding:18px 32px}
+.ask.anim .ask-lead,.ask.anim .ask-text .btn{transition:opacity 1s var(--ease),transform 1.1s var(--ease),box-shadow .25s,background .25s}
+.ask.anim:not(.seen) .ask-lead,.ask.anim:not(.seen) .ask-text .btn{opacity:0;transform:translateY(24px)}
+.ask.anim.seen .ask-lead{transition-delay:1.5s}
+.ask.anim.seen .ask-text .btn{transition-delay:1.75s,1.75s,0s,0s}
+.ask.seen .ask-text .btn{animation:askPulse 3.6s ease-in-out 3.4s infinite}
+@keyframes askPulse{0%,100%{box-shadow:0 8px 24px -10px rgba(200,16,46,.7),0 0 0 0 rgba(255,190,100,0)}50%{box-shadow:0 8px 30px -8px rgba(200,16,46,.85),0 0 34px 2px rgba(255,180,90,.45)}}
+
+/* 1: фонарики поднимаются в небо */
+.ask[data-ask="1"] .ask-flock{display:block;position:absolute;inset:0;-webkit-mask-image:radial-gradient(520px 300px at 50% 50%,rgba(0,0,0,.08) 55%,#000 100%);mask-image:radial-gradient(520px 300px at 50% 50%,rgba(0,0,0,.08) 55%,#000 100%)}
+.ask-lamp{position:absolute;top:100%;opacity:var(--o);translate:calc(var(--mx) * var(--o) * 34px) calc(var(--my) * var(--o) * 16px);animation:askRise linear infinite;will-change:transform}
+.ask-lamp img{display:block;width:100%;height:auto;animation:askSway 6s ease-in-out infinite alternate}
+@keyframes askRise{0%{transform:translate3d(0,4%,0)}50%{transform:translate3d(var(--dx),calc(var(--rise) * -.5),0)}100%{transform:translate3d(calc(var(--dx) * .25),calc(var(--rise) * -1),0)}}
+.ask{--rise:1150px}
+.ask-lamp.one{animation:askRelease 14s linear both}
+@keyframes askRelease{0%{transform:scale(.3);opacity:0}6%{transform:scale(1);opacity:1}100%{transform:translate3d(var(--dx),-1100px,0) scale(.55);opacity:.4}}
+@keyframes askSway{from{transform:rotate(-4deg) scale(.99)}to{transform:rotate(4deg) scale(1.03);filter:brightness(1.18)}}
+
+.ask.off *,.ask.off *::after,.still .ask *,.still .ask *::after{animation-play-state:paused!important}
+.still .ask .ask-w .c{animation-play-state:running!important}
+/* без движения: фонарики стоят на своих местах */
+.ask.calm .ask-lamp{top:calc(var(--rest) * 1%)}
+
+@media (max-width:1100px){.ask-lamp{zoom:.82}}
+@media (max-width:760px){
+  .ask{--rise:980px;min-height:clamp(560px,calc(100svh - 20px),760px);padding:96px 18px 60px}
+  .ask-lamp{zoom:.62}
+  .ask[data-ask="1"] .ask-flock{-webkit-mask-image:radial-gradient(290px 220px at 50% 50%,rgba(0,0,0,.08) 62%,#000 100%);mask-image:radial-gradient(290px 220px at 50% 50%,rgba(0,0,0,.08) 62%,#000 100%)}
+  .ask-lead{font-size:17px;font-weight:400;max-width:300px;margin:18px 0 26px}
+  .ask-text::before{inset:-60px -40px}
+}
+@media (max-height:700px){
+  .ask{padding-top:92px;padding-bottom:44px}
+  .ask h2{font-size:clamp(36px,5vw,62px)}
+  .ask-lead{margin:14px 0 20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ask *,.ask *::before,.ask *::after{animation:none!important;transition:none!important}
+  .ask-lamp{top:calc(var(--rest) * 1%)}
+}
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-menu" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5h16M4 12h16M4 19h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="5" height="18" x="14" y="3" rx="1"/><rect width="5" height="18" x="5" y="3" rx="1"/></g></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10M7 17L17 7"/></symbol>
   <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233a14 14 0 0 0 6.392 6.384"/></symbol>
   <symbol id="i-whale-tail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 14L8.9134 12.39C8.9709 12.16 9 11.93 9 11.7C9 10.71 8.4652 9.79 7.5913 9.28L6.5 8.64C4.949 7.73 4 6.1 4 4.34V3.49C4 3.05 4.545 2.83 4.8638 3.15L4.9393 3.22C5.6185 3.88 6.5396 4.25 7.5 4.25C8.4604 4.25 9.3815 4.62 10.0607 5.29L12 7.18M15.5 14.5L15.0584 12.35C15.0196 12.16 15 11.96 15 11.77C15 10.74 15.5541 9.78 16.4597 9.25L17.5 8.65C19.051 7.74 20 6.1 20 4.34V3.49C20 3.05 19.455 2.83 19.1362 3.15L19.0607 3.22C18.3815 3.88 17.4604 4.25 16.5 4.25C15.5396 4.25 14.6185 4.63 13.9393 5.29L12 7.18M2 14.5C2.9123 13.54 4.1772 13 5.5 13C6.8228 13 8.0877 13.54 9 14.5C9.9123 15.46 11.1772 16 12.5 16C13.8228 16 15.0877 15.46 16 14.5C16.9123 13.54 18.1772 13 19.5 13C20.4 13 21.3 13.25 22 13.7M2 19.5C2.9123 18.54 4.1772 18 5.5 18C6.8228 18 8.0877 18.54 9 19.5C9.9123 20.46 11.1772 21 12.5 21C13.8228 21 15.0877 20.46 16 19.5C16.9123 18.54 18.1772 18 19.5 18C20.4 18 21.3 18.25 22 18.7"/></symbol>
@@ -648,14 +901,19 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
 <header class="nav" id="nav">
   <div class="wrap">
     <a href="#top" class="logo" aria-label="КитНавигатор, на главную"><span class="mark" aria-hidden="true"><svg><use href="#i-whale-tail"/></svg></span><b>Кит<span>Навигатор</span></b></a>
-    <ul>
-      <li><a href="#services">Услуги</a></li>
-      <li><a href="#cases">Кейсы</a></li>
-      <li><a href="#process">Как работаем</a></li>
-      <li><a href="#founder">Команда</a></li>
-      <li><a href="#contacts">Контакты</a></li>
-    </ul>
-    <a class="tel" href="tel:+79240102520"><svg class="ico"><use href="#i-phone"/></svg><span>+7 924 010-25-20</span></a>
+    <nav class="nav-menu" id="navMenu" aria-label="Основное меню">
+      <ul>
+        <li><a href="#services">Услуги</a></li>
+        <li><a href="#cases">Кейсы</a></li>
+        <li><a href="#process">Как работаем</a></li>
+        <li><a href="#founder">Команда</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+    <div class="nav-act">
+      <a class="tel" href="tel:+79240102520" aria-label="Позвонить: +7 924 010-25-20"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><span>+7 924 010-25-20</span></a>
+      <button type="button" class="burger" id="burger" aria-controls="navMenu" aria-expanded="false" aria-label="Открыть меню" hidden><svg class="ico i-open" aria-hidden="true"><use href="#i-menu"/></svg><svg class="ico i-close" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
   </div>
 </header>
 
@@ -680,6 +938,7 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
       </div>
     </div>
       </div>
+  <button type="button" class="motion-btn" id="motionBtn" aria-label="Остановить анимацию" title="Остановить анимацию" hidden><svg class="ico i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ico i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
 </section>
 <script>
 (function(){
@@ -785,33 +1044,218 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
   </div>
 </section>
 
-<!-- Кейсы -->
-<section class="sec cases" id="cases">
-  <div class="wrap">
-    <div class="sec-head"><h2>Наши <em>проекты</em></h2></div>
-    <div class="case-grid">
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-tour.webp" alt="Участники бизнес-тура РАСТО в автосалоне в Китае" loading="lazy" decoding="async"></div><h3>Бизнес-тур РАСТО в Шанхай: выставка Automechanika и встречи с китайскими автопредприятиями</h3><span class="tag">Бизнес-тур</span></article>
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-b2b.webp" alt="Переговоры за круглым столом на B2B-встрече китайских и российских предприятий" loading="lazy" decoding="async"></div><h3>B2B-встречи китайских и российских автопредприятий</h3><span class="tag">Организация встреч</span></article>
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-med.webp" alt="Полки с лабораторными препаратами и медицинским оборудованием" loading="lazy" decoding="async"></div><h3>Локализация медицинского оборудования в РФ</h3><span class="tag">Локализация</span></article>
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-parks.webp" alt="Погрузка оборудования для парка развлечений в контейнер на китайском заводе" loading="lazy" decoding="async"></div><h3>Поиск и проверка поставщиков оборудования для парков развлечений</h3><span class="tag">Поиск и проверка</span></article>
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-training.webp" alt="Тренинг по работе с китайскими поставщиками" loading="lazy" decoding="async"></div><h3>Тренинги по работе с китайскими поставщиками</h3><span class="tag">Обучение</span></article>
-      <article class="case"><div class="case-img"><img class="bg" src="assets/case-analysis.webp" alt="Аналитика китайского рынка на ноутбуке" loading="lazy" decoding="async"></div><h3>Анализ китайского рынка медицинских исследований и поиск партнёров</h3><span class="tag">Анализ рынка</span></article>
-    </div>
+<!-- Проекты -->
+<section class="pj" id="cases" data-pj="1">
+  <div class="pj-back" aria-hidden="true"><img src="assets/pj-bg-harbor.webp" alt="" class="on" data-bg="harbor" loading="lazy" decoding="async"></div>
+  <div class="wrap"><h2 aria-label="Наши проекты"><span class="pj-w" aria-hidden="true">Наши</span> <em aria-hidden="true"><span class="pj-w">проекты</span></em></h2></div>
+  <div class="pj-body wrap">
+    <ul class="pj-list">
+      <li class="pj-item" style="--pos:50% 62%;--k:0">
+        <button type="button" class="pj-shot" aria-label="Проект: Бизнес-тур РАСТО в Шанхай">
+          <span class="pj-pic"><img src="assets/case-tour.webp" alt="Участники бизнес-тура РАСТО в автосалоне в Китае" width="1000" height="750" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Бизнес-тур</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Бизнес-тур</p>
+          <h3>Бизнес-тур РАСТО в Шанхай</h3>
+          <p class="pj-text">Организовали тур «под ключ» с полным сопровождением для Региональной ассоциации станций техобслуживания: выставка Automechanika, тренинг и встречи с передовыми автопредприятиями Китая.</p>
+          <p class="pj-res">Встречи с Zeekr, GAC, Leapmotor и другими</p>
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: бизнес-тур РАСТО в Шанхай">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+      <li class="pj-item" style="--pos:48% 50%;--k:1">
+        <button type="button" class="pj-shot" aria-label="Проект: Встречи автопредприятий двух стран">
+          <span class="pj-pic"><img src="assets/case-b2b.webp" alt="Переговоры за круглым столом на B2B-встрече китайских и российских предприятий" width="700" height="525" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Встречи B2B</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Встречи B2B</p>
+          <h3>Встречи автопредприятий двух стран</h3>
+          <p class="pj-text">Организовали деловую встречу китайских и российских предприятий автомобильной сферы и провели переговоры.</p>
+          <p class="pj-res">Настроены прямые каналы связи и сотрудничества</p>
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: встречи автопредприятий двух стран">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+      <li class="pj-item" style="--pos:55% 50%;--k:2">
+        <button type="button" class="pj-shot" aria-label="Проект: Локализация медоборудования в России">
+          <span class="pj-pic"><img src="assets/case-med.webp" alt="Полки с лабораторными препаратами и медицинским оборудованием" width="700" height="393" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Локализация</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Локализация</p>
+          <h3>Локализация медоборудования в России</h3>
+          <p class="pj-text">Подготовили и перевели с китайского на русский пакет документов и локализовали программы нескольких видов медицинского оборудования.</p>
+          <p class="pj-res">Полный пакет документов на русском языке</p>
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: локализация медоборудования в России">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+      <li class="pj-item" style="--pos:66% 50%;--k:3">
+        <button type="button" class="pj-shot" aria-label="Проект: Оборудование для парков развлечений">
+          <span class="pj-pic"><img src="assets/case-parks.webp" alt="Погрузка оборудования для парка развлечений в контейнер на китайском заводе" width="700" height="525" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Поставщики</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Поставщики</p>
+          <h3>Оборудование для парков развлечений</h3>
+          <p class="pj-text">Провели анализ рынка, нашли и проверили поставщиков, организовали посещение заводов. Риски для клиента свели к минимуму.</p>
+          <p class="pj-res">Клиент выбрал основного поставщика и двух запасных</p>
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: оборудование для парков развлечений">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+      <li class="pj-item" style="--pos:68% 50%;--k:4">
+        <button type="button" class="pj-shot" aria-label="Проект: Тренинги по работе с китайскими поставщиками">
+          <span class="pj-pic"><img src="assets/case-training.webp" alt="Тренинг по работе с китайскими поставщиками" width="700" height="525" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Обучение</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Обучение</p>
+          <h3>Тренинги по работе с китайскими поставщиками</h3>
+          <p class="pj-text">Проведение тренингов по эффективной работе с китайскими поставщиками.</p>
+          
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: тренинги по работе с китайскими поставщиками">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+      <li class="pj-item" style="--pos:42% 50%;--k:5">
+        <button type="button" class="pj-shot" aria-label="Проект: Поиск партнёров в медицинских исследованиях">
+          <span class="pj-pic"><img src="assets/case-analysis.webp" alt="Аналитика китайского рынка на ноутбуке" width="1000" height="666" loading="lazy" decoding="async" draggable="false"></span>
+          <i class="pj-bar" aria-hidden="true"></i>
+          <span class="pj-label" aria-hidden="true">Анализ рынка</span>
+        </button>
+        <div class="pj-info">
+          <p class="pj-tag">Анализ рынка</p>
+          <h3>Поиск партнёров в медицинских исследованиях</h3>
+          <p class="pj-text">По запросу клиента изучили китайскоязычные медицинские исследования, подготовили отчёт и список возможных партнёров из Китая.</p>
+          <p class="pj-res">Обзвонили всю базу и назначили переговоры</p>
+          <a class="btn btn-red btn-sm" href="#contacts" data-topic="Хочу обсудить похожую задачу: поиск партнёров в медицинских исследованиях">Обсудить похожую задачу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        </div>
+      </li>
+    </ul>
   </div>
 </section>
+<script>
+(function(){
+  var sec=document.getElementById('cases');
+  var body=sec.querySelector('.pj-body'), list=sec.querySelector('.pj-list');
+  var items=[].slice.call(sec.querySelectorAll('.pj-item'));
+  var shots=items.map(function(it){return it.querySelector('.pj-shot');});
+  var infos=items.map(function(it){return it.querySelector('.pj-info');});
+  var N=items.length, cur=0, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var auto=!reduce, visible=false, n=0;
+
+  // заголовок по буквам: «Золотой свет», как на первом экране
+  [].forEach.call(sec.querySelectorAll('.pj-w'),function(w){
+    var t=w.textContent; w.textContent='';
+    t.split('').forEach(function(ch){var c=document.createElement('span');c.className='c';c.textContent=ch;c.style.setProperty('--n',n++);w.appendChild(c);});
+  });
+
+  // описания лежат в общем месте под фото: у текста всегда свои координаты
+  var box=document.createElement('div'); box.className='pj-infos';
+  infos.forEach(function(i){box.appendChild(i);});
+  var big=document.createElement('div'); big.className='pj-big'; big.setAttribute('aria-hidden','true');
+  items.forEach(function(it){ var img=it.querySelector('img').cloneNode(); img.alt=''; img.style.objectPosition=it.style.getPropertyValue('--pos'); big.appendChild(img); });
+  body.insertBefore(big,list); body.appendChild(box);
+
+  function user(){ auto=false; sec.classList.add('manual'); }
+  function show(i){
+    cur=(i+N)%N;
+    items.forEach(function(it,k){ it.classList.toggle('on',k===cur); infos[k].classList.toggle('on',k===cur); shots[k].setAttribute('aria-current',k===cur?'true':'false'); });
+    [].forEach.call(big.children,function(img,k){img.classList.toggle('on',k===cur);});
+  }
+
+  var sx=null, sy=0, swiped=false;
+  shots.forEach(function(b,k){ b.addEventListener('click',function(){ if(swiped) return; user(); show(k); }); });
+  // на телефоне большое фото листается пальцем
+  big.addEventListener('pointerdown',function(e){sx=e.clientX; sy=e.clientY; swiped=false;});
+  big.addEventListener('pointerup',function(e){
+    if(sx===null) return; var dx=e.clientX-sx, dy=e.clientY-sy; sx=null;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)){ swiped=true; user(); show(cur+(dx<0?1:-1)); setTimeout(function(){swiped=false;},60); }
+  });
+  big.addEventListener('pointercancel',function(){sx=null;});
+
+  // показ сам переходит дальше, когда золотая черта дошла до конца; нажатие его отключает
+  sec.addEventListener('animationend',function(e){ if(e.animationName==='pjBar'&&auto&&visible) show(cur+1); });
+  sec.addEventListener('focusin',function(e){ if(e.target.matches(':focus-visible')) user(); });
+  box.addEventListener('pointerenter',function(){sec.classList.add('reading');});
+  box.addEventListener('pointerleave',function(){sec.classList.remove('reading');});
+
+  show(0);
+  if(reduce||!('IntersectionObserver' in window)){ sec.classList.add('seen','manual'); return; }
+  sec.classList.add('anim','paused');
+  new IntersectionObserver(function(e){
+    visible=e[0].intersectionRect.height>=Math.min(320,innerHeight*.45);
+    sec.classList.toggle('paused',!visible);
+    if(visible) sec.classList.add('seen');
+  },{threshold:[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1]}).observe(sec);
+})();
+</script>
 
 <!-- Консультация -->
-<section class="consult" style="padding-top:110px">
-  <div class="wrap">
-    <div class="consult-box">
-      <div>
-        <h3>Не уверены, какая услуга нужна?</h3>
-        <p>Опишите задачу, подскажем, с чего начать.</p>
-      </div>
-      <a class="btn btn-milk" href="#contacts" data-topic="Хочу получить консультацию">Получить консультацию <svg class="ico"><use href="#i-arrow"/></svg></a>
-    </div>
+<section class="ask" id="consult" data-ask="1" aria-labelledby="askTitle">
+  <div class="ask-scene" aria-hidden="true">
+    <img class="ask-bg" data-for="1" src="assets/ask-bg-lanterns.webp" alt="" loading="lazy" decoding="async">
+    <div class="ask-flock"></div>
+  </div>
+  <div class="ask-text">
+    <h2 id="askTitle" aria-label="Не уверены, какая услуга нужна?"><span aria-hidden="true"><span class="ask-w">Не</span> <span class="ask-w">уверены,</span> <span class="ask-w">какая</span></span><br> <em aria-hidden="true"><span class="ask-w">услуга</span> <span class="ask-w">нужна?</span></em></h2>
+    <p class="ask-lead">Опишите задачу, подскажем, с чего начать.</p>
+    <a class="btn btn-red" href="#contacts" data-topic="Хочу получить консультацию">Получить консультацию <svg class="ico"><use href="#i-arrow"/></svg></a>
   </div>
 </section>
+<script>
+(function(){
+  var sec=document.getElementById('consult'), flock=sec.querySelector('.ask-flock');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, n=0;
+  function rnd(a,b){return a+Math.random()*(b-a);}
+
+  // заголовок по буквам: «Золотой свет», как на первом экране
+  [].forEach.call(sec.querySelectorAll('.ask-w'),function(w){
+    var t=w.textContent; w.textContent='';
+    t.split('').forEach(function(ch){var c=document.createElement('span');c.className='c';c.textContent=ch;c.style.setProperty('--n',n++);w.appendChild(c);});
+  });
+
+  // фонарики: ближние крупные по краям, дальние маленькие за текстом, чтобы его не перебивать
+  function lantern(o){
+    var d=document.createElement('div'); d.className='ask-lamp'+(o.one?' one':'');
+    d.style.cssText='left:'+o.x+'%;width:'+o.w+'px;--o:'+o.o+';--dx:'+rnd(-70,70).toFixed(0)+'px;--rest:'+o.rest+'%;animation-duration:'+o.t+'s;animation-delay:'+o.delay+'s'+(o.y!==undefined?';top:'+o.y+'%':'');
+    var i=document.createElement('img'); i.src='assets/ask-lantern.webp'; i.alt=''; i.style.animationDelay=rnd(-6,0).toFixed(1)+'s';
+    d.appendChild(i); flock.appendChild(d);
+    if(o.one) d.addEventListener('animationend',function(e){ if(e.target===d) d.remove(); });
+    return d;
+  }
+  //        слева%, ширина, яркость, секунды, доля пути на старте, высота в покое%
+  [[4,132,1,26,.30,56],[15,74,.92,34,.66,22],[88,118,1,28,.46,40],[79,66,.9,36,.14,70],[94,56,.85,40,.78,12],[9,48,.8,44,.9,6],
+   [24,40,.62,48,.2,66],[70,44,.66,46,.72,18],[37,26,.42,60,.52,40],[61,22,.38,64,.34,58],[48,18,.34,70,.8,10],[84,34,.7,50,.04,78],[30,24,.4,66,.96,4],[56,30,.34,58,.08,74]
+  ].forEach(function(a){ lantern({x:a[0],w:a[1],o:a[2],t:a[3],delay:-(a[3]*a[4]).toFixed(1),rest:a[5]}); });
+  // нажатие по небу запускает ещё один фонарик
+  sec.addEventListener('click',function(e){
+    if(reduce||e.target.closest('a,button')) return;
+    if(flock.querySelectorAll('.one').length>11) return;
+    var r=sec.getBoundingClientRect(), w=rnd(54,96);
+    lantern({x:((e.clientX-r.left-w/2)/r.width*100).toFixed(2),y:((e.clientY-r.top-w*.7)/r.height*100).toFixed(2),w:w.toFixed(0),o:1,t:14,delay:0,rest:0,one:true});
+  });
+
+  // лёгкое смещение слоёв вслед за мышью
+  sec.addEventListener('pointermove',function(e){
+    if(e.pointerType!=='mouse'||reduce||document.documentElement.classList.contains('still')) return;
+    var r=sec.getBoundingClientRect();
+    sec.style.setProperty('--mx',((e.clientX-r.left)/r.width-.5).toFixed(3));
+    sec.style.setProperty('--my',((e.clientY-r.top)/r.height-.5).toFixed(3));
+  });
+
+  if(reduce||!('IntersectionObserver' in window)){ sec.classList.add('seen','calm'); return; }
+  sec.classList.add('anim','off');
+  new IntersectionObserver(function(e){
+    sec.classList.toggle('off',!e[0].isIntersecting);       // движение только пока блок на экране
+    if(e[0].intersectionRect.height>=Math.min(300,innerHeight*.42)) sec.classList.add('seen');
+  },{threshold:[0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1]}).observe(sec);
+  sec.addEventListener('focusin',function(){sec.classList.add('seen');});
+})();
+</script>
 
 <!-- Как работаем -->
 <section class="hw" id="process" data-way="2">
@@ -1011,7 +1455,7 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
     marks.forEach(function(m,k){m.setAttribute('aria-current',k===i?'step':'false');});
   }
   function stop(){clearInterval(timer);timer=0;}
-  function run(){ if(!auto||timer||!visible) return; timer=setInterval(function(){show((cur+1)%steps.length);},STEP); }
+  function run(){ if(!auto||timer||!visible) return; timer=setInterval(function(){ if(!document.documentElement.classList.contains('still')) show((cur+1)%steps.length); },STEP); }
   function lightAll(){ steps.forEach(function(s){s.classList.add('lit');}); }
   // нажатие выбирает шаг; после этого показ больше не перебивает
   marks.forEach(function(m,k){m.addEventListener('click',function(){ auto=false; stop(); lightAll(); show(k); });});
@@ -1039,7 +1483,7 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
   function stop(){clearInterval(timer);clearTimeout(wait);timer=0;wait=0;}
   function run(delay){
     if(reduce||timer||wait) return;
-    wait=setTimeout(function(){wait=0;show(cur);timer=setInterval(function(){show((cur+1)%dirs.length);},2600);},delay||0);
+    wait=setTimeout(function(){wait=0;show(cur);timer=setInterval(function(){ if(!document.documentElement.classList.contains('still')) show((cur+1)%dirs.length); },2600);},delay||0);
   }
   dirs.forEach(function(li,k){li.addEventListener('pointerenter',function(){stop();show(k);});});
   lm.querySelector('.lm-dirs').addEventListener('pointerleave',function(){ if(seen) run(600); });
@@ -1122,8 +1566,28 @@ footer{border-top:1px solid rgba(226,194,126,.2)}
 document.addEventListener('DOMContentLoaded',()=>{
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nav = document.getElementById('nav');
-  const onScroll=()=>nav.classList.toggle('scrolled',scrollY>30);
+  const onScroll=()=>nav.classList.toggle('scrolled',scrollY>30||nav.classList.contains('open'));
   addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // меню на телефоне и планшете
+  const burger=document.getElementById('burger'), menu=document.getElementById('navMenu');
+  const setMenu=open=>{
+    nav.classList.toggle('open',open);
+    burger.setAttribute('aria-expanded',String(open));
+    burger.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');
+    onScroll();
+  };
+  const isOpen=()=>nav.classList.contains('open');
+  burger.hidden=false;
+  burger.addEventListener('click',e=>{
+    setMenu(!isOpen());
+    if(isOpen()&&e.detail===0) menu.querySelector('a').focus();      // открыли с клавиатуры
+  });
+  menu.addEventListener('click',e=>{ if(e.target.closest('a')) setMenu(false); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape'&&isOpen()){ setMenu(false); burger.focus(); } });
+  document.addEventListener('pointerdown',e=>{ if(isOpen()&&!nav.contains(e.target)) setMenu(false); });
+  nav.addEventListener('focusout',e=>{ if(isOpen()&&e.relatedTarget&&!nav.contains(e.relatedTarget)) setMenu(false); });
+  matchMedia('(min-width:981px)').addEventListener('change',()=>setMenu(false));
 
   // тема в форме по кнопкам «Обсудить услугу» / «Консультация»
   const m=document.getElementById('m');
@@ -1158,12 +1622,28 @@ document.addEventListener('DOMContentLoaded',()=>{
   var v=document.getElementById('heroVideo'); if(!v) return;
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
   var src=v.getAttribute('src'), first=v.getAttribute('poster');
-  function play(){ if(!v.ended) v.play().catch(function(){}); }   // play() после конца начал бы ролик заново
-  function sync(){
-    if(reduce.matches){v.pause();v.removeAttribute('autoplay');v.removeAttribute('src');v.poster=v.dataset.last;v.load();}
-    else { if(!v.getAttribute('src')){v.poster=first;v.src=src;} play(); }
+  var btn=document.getElementById('motionBtn'), KEY='kn-still', still=false;
+  try{ still=localStorage.getItem(KEY)==='1'; }catch(e){}           // выбор посетителя помним между заходами
+  function play(){ if(!still&&!v.ended) v.play().catch(function(){}); }   // play() после конца начал бы ролик заново
+  function paint(){
+    var t=still?'Включить анимацию':'Остановить анимацию';
+    document.documentElement.classList.toggle('still',still);
+    btn.setAttribute('aria-label',t); btn.title=t;
   }
-  sync(); if(reduce.addEventListener) reduce.addEventListener('change',sync);
+  function sync(){
+    btn.hidden=reduce.matches;                                    // при «уменьшении движения» останавливать нечего
+    if(reduce.matches){v.pause();v.removeAttribute('autoplay');v.removeAttribute('src');v.poster=v.dataset.last;v.load();}
+    else {
+      if(!v.getAttribute('src')){v.poster=first;v.src=src;}
+      if(still){v.removeAttribute('autoplay');v.poster=v.dataset.last;v.pause();} else play();
+    }
+  }
+  btn.addEventListener('click',function(){
+    still=!still;
+    try{ localStorage.setItem(KEY,still?'1':'0'); }catch(e){}
+    paint(); if(still) v.pause(); else play();
+  });
+  paint(); sync(); if(reduce.addEventListener) reduce.addEventListener('change',sync);
   if('IntersectionObserver' in window){
     new IntersectionObserver(function(e){ if(reduce.matches) return; e[0].isIntersecting? play() : v.pause(); },{threshold:.1}).observe(v);
   }
